@@ -1,0 +1,20 @@
+.btn-using {
+  border: 1px solid #9cabb9;
+}
+
+::ng-deep .input-size{
+  display: none !important;
+}
+
+::ng-deep .tooltip-inner {
+  color: white;
+  background-color: #000000;
+  opacity:80% ;
+}
+
+::ng-deep .bs-tooltip-top .arrow::before,
+::ng-deep .bs-tooltip-auto[x-placement^='top'] .arrow::before {
+border-top-color: #000000 !important;
+opacity:80% ;
+}
+

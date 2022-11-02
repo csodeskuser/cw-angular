@@ -1,0 +1,43 @@
+{
+"en": {
+    "Agregar Tiempo Manual": "Add Manual Time",
+    "Actividad por Usuario": "User Activity",
+    "Uso de Aplicaciones": "Application Usage",
+    "Tiempo Trabajado": "Worked Time",
+    "Capturas de Pantalla": "Screenshots",
+    "Reportes de Productividad": "Time Tracking Reports",
+    "Usuarios": "Users",
+    "Grupos de Usuarios": "User Groups",
+    "Ventana de Tiempo": "Window Tracking",
+    "Configuración de Seguridad": "Security Settings",
+    "Aplicaciones": "Applicattions",
+    "Grupos de Aplicaciones": "Application Groups",
+    "Empresas Involucradas": "Stakeholders",
+    "Roles": "Roles",
+    "Configuración de Cliente": "Client Configuration",
+    "Colector de Logs": "Log Collector",
+    "Papelera": "Trash",
+    "Pagos Recibidos": "Payments",
+    "Planilla Automática de Horas": "Automatic Timesheet",    
+    "Tiempo Manual": "Manual Time",
+    "Productividad Diaria": "Daily Productivity",
+    "Ante.": "Prev.",
+    "Prox.": "Next.",
+    "Hoy": "Today",
+    "Mes": "Month",
+    "Semana": "Week",
+    "Día": "Day",
+    "Guardar": "Save",
+    "Cerrar": "Close",
+    "Nombre": "Name",
+    "Fecha": "Date",
+    "Hora inicio": "Start time",
+    "Hora finalización": "End time",
+    "Ninguna": "None",
+    "Seleccione una tarea": "Select a task",
+    "TRANSLATOR": {
+      "SELECT": "Select your language"
+    },
+    "Cambiar": "Change"
+  }
+}

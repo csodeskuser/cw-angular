@@ -1,0 +1,42 @@
+<loading [loadingIn]="loading"></loading>
+<div class="container">
+  <div class="card p-5 mt-6">
+    <form [formGroup]="form" class="form" (ngSubmit)="onSubmit()"> 
+      <div class="row">
+        <div class="col text-right">
+          <img [src]="'assets/imagesTest/1.jpeg'" class="img-avatar">
+        </div>
+        <div class="col text-left">
+          <label for="file-upload" class="btn btn-secondary btn-sm px-5 py-2 mt-6">
+            {{'Cambiar'|translate }}
+          </label>
+          <input id="file-upload" class="file" type="file" (change)="onFileChange($event)"/>    
+        </div>                  
+      </div> 
+      
+      <div class="row form-group">
+          <label class="col-md-3" translate>{{'Nombre'|translate }} *:</label>      
+          <div class="col-md-9">
+            <input type="text" class="form-control" id="email" placeholder="Enter email" name="email">
+          </div>
+      </div> 
+      
+      <div class="row form-group">
+        <label class="col-md-3" translate>{{'Cargo'|translate}}:</label>
+        <div class="col-md-9">
+          <input 
+            type="text" 
+            formControlName="position" 
+            class="form-control form-control-sm" 
+            placeholder="{{'Cargo' | translate}}">
+        </div>
+      </div>  
+      
+      <div class="row form-group">
+        <div class="col text-right">
+          <button class="btn btn-secondary">{{'Aceptar'}}</button>
+        </div>
+      </div>      
+    </form>
+  </div>
+</div>

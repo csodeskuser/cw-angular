@@ -1,0 +1,17 @@
+<div class="dropdown" ngbDropdown placement="bottom-right">
+  <div ngbDropdownToggle class="topbar-item" data-toggle="dropdown" data-offset="10px,0px">
+    <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1">
+      <span class="menu-icon"><i class="fas fa-cog"></i></span>
+    </div>
+  </div>
+
+  <div ngbDropdownMenu class="dropdown-menu p-0 m-0 dropdown-menu-anim-up dropdown-menu-sm dropdown-menu-right menu-settings">
+    <button 
+      ngbDropdownItem 
+      *ngFor="let item of settings"
+      [routerLink]="item.link"
+    >
+      <span>{{ item.text }}</span>
+    </button>    
+  </div>  
+</div>

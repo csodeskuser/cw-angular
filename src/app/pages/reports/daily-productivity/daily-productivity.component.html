@@ -1,0 +1,88 @@
+<loading [loadingIn]="loading"></loading>
+
+<div class="card p-5">
+  <div class="row">
+    <div class="col-6 col-md-4">
+      <button class="btn btn-sm btn-secondary" (click)="filtered=!filtered">
+        {{'Filtros'|translate}} >>
+      </button> 
+    </div>
+    <div class="col-6 col-md-4 text-right">
+      <!-- <select [(ngModel)]="nResults" class="form-control form-control-sm w-100px ml-auto">
+        <option *ngFor="let item of optionNResults">{{item}}</option>
+      </select> -->
+    </div>    
+    <div class="col-12 col-md-4 text-right">      
+      <button class="btn p-0">
+        <i class="fa fa-question-circle" style='color:#e1e1ed'></i>
+      </button>        
+      <button class="btn btn-secondary btn-print mr-2" (click)="export('pdf')" ngbTooltip="Download Pdf">
+        <i class="fa fa-file-pdf"></i>
+      </button>
+      <button class="btn btn-secondary btn-print" (click)="export('xls')" ngbTooltip="Download Excel">
+        <i class="fa fa-file-excel"></i>
+      </button>        
+    </div>
+  </div>
+  <div class="row mt-6">
+    <div class="col-12 col-md-6" *ngIf="filtered">
+      <filter-report (filter)="filter=$event"></filter-report>      
+    </div>
+    <div class="col-12 col-md-2 div-beside-filter">
+      <datepicker [dateIn]="startdate" (dateOut)="startdate=$event"></datepicker>
+    </div>    
+    <!-- <div class="col-12 col-md-2 div-beside-filter">
+      <datepicker [dateIn]="enddate" (dateOut)="enddate=$event"></datepicker>
+    </div>         -->
+    <div class="col-12 col-md-2 div-beside-filter">
+      <button class="btn btn-secondary" (click)="load()">{{'Buscar'|translate}}</button>
+    </div>            
+  </div>
+</div>
+
+<div class="card p-5 mt-5">
+  <highcharts-chart
+    [Highcharts] = "highcharts" 
+    [options] = "chartOptions" 
+    style = "width: 100%; display: block;"
+    [callbackFunction]="chartCb">
+  </highcharts-chart>
+</div>
+
+<div class="card p-5 mt-5">
+  <table
+    class="table table-striped"
+  >
+    <thead>
+      <tr>
+        <td translate>{{'Fecha'|translate }}</td>
+        <td translate>{{'Productivo'|translate }}</td>
+        <td translate>{{'No productivo'|translate }}</td>
+        <td translate>{{'Sin Categorizar'|translate }}</td>
+        <!-- <td translate>{{'Tiempo Reunión'|translate }}</td> -->
+        <td translate>{{'Tiempo Manual'|translate }}</td>              
+        <!-- <td translate>{{'Duración'|translate }}</td> -->
+        <td translate>{{'Productividad'|translate }}
+          <input
+            type="number"
+            style="width: 44px;"
+            [(ngModel)]="proHour"
+            (blur)="load()"
+          />
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="frame-resume" *ngFor="let item of listTableReport">
+        <td>{{item.date}}</td>
+        <td>{{item.productive_time}}</td>
+        <td>{{item.none_productive_time}}</td>
+        <td>{{item.uncategorized_time}}</td>
+        <!-- <td>"00:00:00"</td> -->
+        <td>{{item.manual_time}}</td>
+        <!-- <td>00:00:00</td> -->
+        <td>{{item.average_percentage}}%</td>
+      </tr>
+    </tbody>
+  </table>  
+</div>

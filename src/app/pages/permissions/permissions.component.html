@@ -1,0 +1,174 @@
+<loading [loadingIn]="loading"></loading>
+
+<div class="card p-5">
+  <div class="row">
+    <div class="col-12 text-right">
+      <button class="btn btn-sm btn-primary" (click)="addPermission(content)">
+        crear permisos
+      </button>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr class="headings_tr">
+          <th>#</th>
+
+          <th>
+            {{ "Permisos" | translate }}
+          </th>
+
+          <th >{{ "Acciones" | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of permissions; let i = index">
+          <td>{{ i + 1 }}</td>
+
+          <td>{{ item.name }}</td>
+
+          <td>
+            <a
+              href="javascript:;"
+              title="{{ 'Editar' | translate }}"
+              (click)="editPermissions(content1,item.id)"
+            >
+              <i class="fa fa-pencil fa-2x mr-1 btn-outline-primary"></i>
+            </a>
+            <!-- <a href="javascript:;" title="{{'Grupos'|translate}}">
+              <i class="fa fa-users fa-2x mr-1 btn-outline-primary"></i>
+            </a> -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="text-right">
+    <pagination
+    [pageSize]="filter.perPage" 
+    [page]="filter.page" 
+    [collectionSize]="filter.collectionSize" 
+    (paginationOut)="setPagination($event)">
+    >
+    </pagination>
+  </div>
+</div>
+
+<!--Modal crear permisos-->
+<ng-template #content let-modal>
+  <div class="modal-header modal-head">
+    <label>{{ "permisos nuevo" | translate }}</label>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="overflow: auto">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label translate>{{ "Nombre" | translate }} *</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          formControlName="name"
+          placeholder="{{ 'Nombre' | translate }}"
+          [ngClass]="{ 'is-invalid': submitted && f['name'].errors }"
+        />
+        <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+          <div *ngIf="f['name'].errors['required']">Name is required</div>
+          <div *ngIf="f['name'].errors['minlength']">
+            Name must be at least 3 characters
+          </div>
+          <div *ngIf="f['name'].errors['maxlength']">
+            Name must not exceed 30 characters
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      class="btn btn-outline-danger mr-2 btn-form"
+      type="button"
+      (click)="cancel()"
+      translate
+    >
+      {{ "Cancelar" | translate }}
+    </button>
+    <button
+      ladda="vm.isloading"
+      class="btn btn-outline-secondary btn-form"
+      (click)="onSubmit()"
+      type="submit"
+      translate
+    >
+      {{ "Crear" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!--Modal editar permisos-->
+<ng-template #content1 let-modal>
+  <div class="modal-header modal-head">
+    <label>{{ "Editar permiso" | translate }}</label>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="overflow: auto">
+    <form [formGroup]="editForm" (ngSubmit)="onSubmitEdit()">
+      <div class="form-group">
+        <label translate>{{ "Nombre" | translate }} *</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          formControlName="name"
+          [ngClass]="{ 'is-invalid': submitted1 && f1['name'].errors }"
+        />
+        <div *ngIf="submitted1 && f1['name'].errors" class="invalid-feedback">
+          <div *ngIf="f1['name'].errors['required']">Name is required</div>
+          <div *ngIf="f1['name'].errors['minlength']">
+            Name must be at least 3 characters
+          </div>
+          <div *ngIf="f1['name'].errors['maxlength']">
+            Name must not exceed 30 characters
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      class="btn btn-outline-danger mr-2 btn-form"
+      type="button"
+      (click)="cancelEdit()"
+      translate
+    >
+      {{ "Cancelar" | translate }}
+    </button>
+    <button
+      ladda="vm.isloading"
+      class="btn btn-outline-secondary btn-form"
+      (click)="onSubmitEdit()"
+      type="submit"
+      translate
+    >
+      {{ "Editar" | translate }}
+    </button>
+  </div>
+</ng-template>
+

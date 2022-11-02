@@ -1,0 +1,19 @@
+.btn-type-report {
+  background-color: #fff!important;
+  color: #b4b4b4!important;
+  border-bottom: 3px solid #b4b4b4;
+  font-weight: 500;
+  font-size: 14px;
+  width: 90px;
+  padding-bottom: 7px!important;
+  margin-left: 10px!important;
+  border-radius: 0px;
+}
+
+.btn-type-report:hover {
+  font-weight: 700;
+}
+
+.btn-type-report.active {
+  border-bottom: 3px solid black;
+}

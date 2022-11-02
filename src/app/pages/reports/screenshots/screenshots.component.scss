@@ -1,0 +1,85 @@
+.circle-icon {
+  border: 5px solid #E1E1EE;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 25px;
+  vertical-align: middle;
+}
+
+.dates-period {
+  font-weight: 500;
+  font-size: 17px; 
+  color: #181C32;
+}
+
+.main-screenshot {
+  padding: 8px;
+  background: #9e9e9e61;
+  margin-bottom: 9px;
+  padding-left: 11px;
+}
+
+.scr-img {
+  border-radius: 4px;
+  padding: 4px;
+  background: #fff;
+  margin-bottom: 15px;
+}
+
+.img-responsive {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.percentage {
+  background: red;
+  border-radius: 3px;
+  width: 40px;
+  text-align: center;
+  display: inline-block;
+  float: right;
+}
+
+
+::ng-deep .lb-dataContainer {
+  display: block;
+  width: 1030.01px;
+}
+
+::ng-deep .lb-image {
+  display: block!important;
+  width: 1031.99px!important;
+  height: 583.986px!important;
+}
+
+// ::ng-deep .lb-container {
+//   width: 130%!important;
+// }
+
+::ng-deep .lb-outerContainer {
+  width: 1030.01px!important;
+  height: 582.014px!important;
+}
+
+
+// ::ng-deep .lightbox {
+//   left: -100px!important;
+// }
+
+// ::ng-deep .lb-nav {
+//   width: 130%!important;
+// }
+
+.album-size {
+  border: none;
+  background-color: white;
+  margin-left: 16%;
+}
+
+.custom-plus {
+  color: black;
+}
+

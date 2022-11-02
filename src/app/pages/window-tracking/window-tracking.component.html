@@ -1,0 +1,768 @@
+<loading [loadingIn]="loading"></loading>
+
+<div class="card p-5">
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <filter-report (filter)="filter=$event"></filter-report>      
+    </div>
+    
+
+    <div style="margin-top: 1%;">
+      <button class="btn btn-secondary mr-2" (click)="addRule(content)">
+        <i class="fa fa-plus"></i>&nbsp;create rules
+      </button>
+    </div>
+
+    <div class="col-lg-3" style="margin-top: 1%;">
+      <button class="btn btn-secondary mr-2" (click)="load()">
+        filter rules
+      </button>
+    </div>
+
+    <div class="col-lg-3" style="margin-top:2%;">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="search"
+          placeholder="rule name"
+        />
+        <div class="input-group-append">
+          <button class="btn btn-secondary" (click)="search()" type="submit">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr class="headings_tr">
+          <th class="text-center">#</th>
+          <th translate>Name</th>
+          <th translate>Start</th>
+          <th translate>The end</th>
+          <th translate>tracking</th>
+          <th translate>Period</th>
+          <th translate>Group</th>
+          <th translate>User</th>
+          <th translate>Watch</th>
+          <th translate class="text-center">{{ "Acciones" | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of ruleslist; let i = index">
+          <td class="text-center">{{ i + 1 }}</td>
+          <td>{{ item.name }}</td>
+          <td>
+            <span *ngIf="item.start_time == null">00:00:00</span
+            >{{ item.start_time }}
+          </td>
+          <td>
+            <span *ngIf="item.end_time == null">00:00:00</span
+            >{{ item.end_time }}
+          </td>
+          <td style="text-align: center">
+            <i style="font-size: 24px; color: red" class="fa fa-times"></i>
+          </td>
+          <td>{{ item.period }}</td>
+          <td>N/a</td>
+          <td>N/A</td>
+          <td style="text-align: center">
+            <a (click)="viewRule(content2, item.id)">
+              <i style="font-size: 24px; color: #2b96a1" class="fa fa-eye"></i>
+            </a>
+          </td>
+          <td class="text-center">
+            <a
+              href="javascript:;"
+              (click)="editRule(content1, item.id)"
+              title="{{ 'Editar' | translate }}"
+            >
+              <i class="fa fa-pencil fa-2x mr-2 icon-secondary"></i>
+            </a>
+            <a
+              href="javascript:;"
+              mwlConfirmationPopover
+              [popoverTitle]="
+                '¿Quieres eliminar este regla de forma permanente?' | translate
+              "
+              [confirmText]="'Si' | translate"
+              [cancelText]="'No' | translate"
+              [placement]="'left'"
+              (confirm)="delete(item.id)"
+              title="{{ 'Eliminar' | translate }}"
+            >
+              <i class="fa fa-trash fa-2x mr-1 icon-delete"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="text-right">
+    <pagination
+      [pageSize]="pageFilter.perPage"
+      [page]="pageFilter.page"
+      [collectionSize]="pageFilter.collectionSize"
+      (paginationOut)="setPagination($event)"
+    >
+    </pagination>
+  </div>
+</div>
+<!--Modal crear rule-->
+<ng-template #content let-modal>
+  <div class="modal-header modal-head">
+    <label>Create rule</label>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="row" styel="font-size: 4px;">
+        <mat-form-field
+          appearance="outline"
+          style="width: 35%; margin-left: 4%"
+        >
+          <mat-label>Name</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="rulename"
+            placeholder="Rule name*"
+            [ngClass]="{ 'is-invalid': submitted && f['rulename'].errors }"
+          />
+          <div
+            *ngIf="submitted && f['rulename'].errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f['rulename'].errors['required']">
+              Rule-name is required
+            </div>
+            <div *ngIf="f['rulename'].errors['minlength']">
+              Rule-name must be at least 3 characters
+            </div>
+            <div *ngIf="f['rulename'].errors['maxlength']">
+              Rule-name must not exceed 30 characters
+            </div>
+          </div>
+        </mat-form-field>
+        <mat-form-field
+          appearance="outline"
+          style="margin-left: 6%; width: 51%"
+        >
+          <mat-label>Description</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="description"
+            placeholder="Description"
+            [ngClass]="{
+              'is-invalid': submitted && f['description'].errors
+            }"
+          />
+          <div
+            *ngIf="submitted && f['description'].errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f['description'].errors['required']">
+              description is required
+            </div>
+            <div *ngIf="f['description'].errors['minlength']">
+              description must be at least 3 characters
+            </div>
+            <div *ngIf="f['description'].errors['maxlength']">
+              description must not exceed 30 characters
+            </div>
+          </div>
+        </mat-form-field>
+      </div>
+      <div>
+        <div class="row">
+          <div class="col-sm-6">
+            <mat-form-field
+              class="example-full-width"
+              style="width: 37%; margin-left: 3%"
+              appearance="outline"
+            >
+              <div class="form-group">
+                <input
+                  matInput
+                  type="time"
+                  class="form-control-x-sm form-control-x-sm"
+                  formControlName="starttime"
+                  placeholder="{{ 'Desde' | translate }}:"
+                  required
+                />
+              </div>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-6">
+            <mat-form-field
+              class="example-full-width"
+              style="width: 37%; margin-left: -60%"
+              appearance="outline"
+            >
+              <div class="form-group">
+                <input
+                  matInput
+                  type="time"
+                  class="form-control-x-sm form-control-x-sm"
+                  formControlName="endtime"
+                  placeholder="{{ 'Hasta' | translate }}:"
+                  required
+                />
+              </div>
+            </mat-form-field>
+            <mat-radio-group
+              aria-label="Select an option"
+              style="margin-left: 12%"
+            >
+              <mat-radio-button id="flexRadioDefault2" value="1" checked>
+                Disable tracking
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="brd-top-bottom">
+        <div class="row">
+          <div class="col-md-12">
+            <mat-radio-group formControlName="mtype" #rGroup>
+              <mat-radio-button
+                value="days"
+                radioGroup="rGroup"
+                style="margin-left: 2%"
+              >
+                Days
+              </mat-radio-button>
+              <mat-radio-button
+                value="week"
+                radioGroup="rGroup"
+                style="margin-left: 22%"
+              >
+                Week
+              </mat-radio-button>
+              <mat-radio-button
+                value="dates"
+                radioGroup="rGroup"
+                style="margin-left: 20%"
+              >
+                Dates
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <!--/row-->
+      </div>
+      <!--/brd-top-bottom-->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="checkbox1 row" *ngIf="form.value.mtype == 'days'">
+            <section class="inlins-name" 
+                     style="margin-right:2%; margin-bottom: 4%;"
+                      *ngFor="let item of days">
+              <mat-checkbox
+                #check
+                [checked]="ddata.indexOf(item) >= 0"
+                (change)="onChange(item, check.checked)"
+                value="item.name"
+                >{{ item.name | translate}}</mat-checkbox
+              >
+            </section>
+          </div>
+          <div class="checkbox" *ngIf="form.value.mtype == 'week'">
+            <label class="inlins-name">
+              <input
+                type="radio"
+                formControlName="wday"
+                value="weekdays"
+              /><span class="radio_span" style="font-size: 15px"
+                >Week days</span
+              >
+            </label>
+            <label class="inlins-name">
+              <input
+                type="radio"
+                formControlName="wday"
+                style="margin-right: 5px; margin-left: 5px"
+                value="weekend"
+              /><span class="radio_span" style="font-size: 15px">Weekends</span>
+            </label>
+          </div>
+          <div
+            class="checkbox col-md-5"
+            *ngIf="form.value.mtype == 'dates'"
+          >
+            <div class="row mt-6">
+              <div class="col-6 col-md-2" style="padding-top: 14px">
+                <datepicker
+                  [dateIn]="data1.log_date"
+                  (dateOut)="data1.log_date = $event"
+                ></datepicker>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      class="btn btn-outline-danger mr-2 btn-form"
+      type="button"
+      (click)="cancel()"
+      translate
+    >
+      {{ "Cancelar" | translate }}
+    </button>
+    <button
+      ladda="vm.isloading"
+      class="btn btn-outline-secondary btn-form"
+      (click)="onSubmit()"
+      type="submit"
+      translate
+    >
+      {{ "Crear" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+
+<!-- edit modal -->
+<ng-template #content1 let-modal>
+  <div class="modal-header modal-head">
+    <label>Edit rule</label>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="editForm" (ngSubmit)="onSubmitEdit()">
+      <div class="row">
+        <mat-form-field
+          appearance="outline"
+          style="width: 35%; margin-left: 4%"
+        >
+          <mat-label>Name</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="rulename"
+            placeholder="Rule name*"
+            [ngClass]="{ 'is-invalid': submitted && f['rulename'].errors }"
+          />
+          <div
+            *ngIf="submitted1 && f1['rulename'].errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f1['rulename'].errors['required']">
+              Rule-name is required
+            </div>
+            <div *ngIf="f1['rulename'].errors['minlength']">
+              Rule-name must be at least 3 characters
+            </div>
+            <div *ngIf="f['rulename'].errors['maxlength']">
+              Rule-name must not exceed 30 characters
+            </div>
+          </div>
+        </mat-form-field>
+        <mat-form-field
+          appearance="outline"
+          style="margin-left: 6%; width: 51%"
+        >
+          <mat-label>Description</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="description"
+            placeholder="Description"
+            [ngClass]="{
+              'is-invalid': submitted1 && f1['description'].errors
+            }"
+          />
+          <div
+            *ngIf="submitted1 && f1['description'].errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f1['description'].errors['required']">
+              description is required
+            </div>
+            <div *ngIf="f1['description'].errors['minlength']">
+              description must be at least 3 characters
+            </div>
+            <div *ngIf="f['description'].errors['maxlength']">
+              description must not exceed 30 characters
+            </div>
+          </div>
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <div class="form-group" style="margin-left: 4%!important;">
+          <mat-form-field appearance="outline" style="width: 86%;">
+            <mat-select  placeholder="Usergroup" formControlName="usergroup_id">
+              <mat-option *ngFor="let item of userGroup" [value]="item.uuid">{{item.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="outline" style="width: 86%;">
+            <mat-select  placeholder="Users" formControlName="user_id">
+              <mat-option *ngFor="let item of userlist" [value]="item.id">{{item.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div style="margin-top: 5%!important;">
+        <div class="row">
+          <div class="col-sm-6">
+            <mat-form-field
+              class="example-full-width"
+              style="width: 37%; margin-left: 3%"
+              appearance="outline"
+            >
+            <mat-label>{{ "Desde" | translate }}:</mat-label>
+              <div class="form-group">
+                <input
+                  matInput
+                  type="time"
+                  class="form-control-x-sm form-control-x-sm"
+                  formControlName="starttime"
+                  required
+                />
+              </div>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-6">
+            
+            <mat-form-field
+              class="example-full-width"
+              style="width: 37%; margin-left: -60%"
+              appearance="outline"
+            >
+            <mat-label>{{ "Hasta" | translate }}:</mat-label>
+              <div class="form-group">
+                <input
+                  matInput
+                  type="time"
+                  class="form-control-x-sm form-control-x-sm"
+                  formControlName="endtime"
+                  required
+                />
+              </div>
+            </mat-form-field>
+            <mat-radio-group
+              aria-label="Select an option"
+              style="margin-left: 12%"
+            >
+              <mat-radio-button id="flexRadioDefault2" value="1" checked>
+                Disable tracking
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="brd-top-bottom">
+        <div class="row">
+          <div class="col-md-12">
+            <mat-radio-group formControlName="mtype" #rGroup>
+              <mat-radio-button
+                value="days"
+                radioGroup="rGroup"
+                style="margin-left: 2%"
+              >
+                Days
+              </mat-radio-button>
+              <mat-radio-button
+                value="week"
+                radioGroup="rGroup"
+                style="margin-left: 22%"
+              >
+                Week
+              </mat-radio-button>
+              <mat-radio-button
+                value="dates"
+                radioGroup="rGroup"
+                style="margin-left: 20%"
+              >
+                Dates
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <!--/row-->
+      </div>
+      <!--/brd-top-bottom-->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="checkbox1 row" *ngIf="editForm.value.mtype == 'days'">
+            <section class="inlins-name" 
+                     style="margin-right:2%; margin-bottom: 4%;"
+                      *ngFor="let item of days">
+              <mat-checkbox
+                #check
+                [checked]="ddata.indexOf(item) >= 0"
+                (change)="onChange(item, check.checked)"
+                value="item.name"
+                >{{ item.name | translate}}</mat-checkbox
+              >
+            </section>
+          </div>
+          <div class="checkbox" *ngIf="editForm.value.mtype == 'week'">
+            <label class="inlins-name">
+              <input
+                type="radio"
+                formControlName="wday"
+                value="Weekdays"
+              /><span class="radio_span" style="font-size: 15px"
+                >Week days</span
+              >
+            </label>
+            <label class="inlins-name">
+              <input
+                type="radio"
+                formControlName="wday"
+                style="margin-right: 5px; margin-left: 5px"
+                value="weekend"
+              /><span class="radio_span" style="font-size: 15px">Weekends</span>
+            </label>
+          </div>
+          <div
+            class="checkbox col-md-5"
+            *ngIf="editForm.value.mtype == 'dates'"
+          >
+            <div class="row mt-6">
+              <div class="col-6 col-md-2" style="padding-top: 14px">
+                <datepicker
+                  [dateIn]="data2.log_date"
+                  (dateOut)="data2.log_date = $event"
+                ></datepicker>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      class="btn btn-outline-danger mr-2 btn-form"
+      type="button"
+      (click)="cancelEdit()"
+      translate
+    >
+      {{ "Cancelar" | translate }}
+    </button>
+    <button
+      ladda="vm.isloading"
+      class="btn btn-outline-secondary btn-form"
+      (click)="onSubmitEdit()"
+      type="submit"
+      translate
+    >
+      {{ "Crear" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+
+<!-- view modal -->
+<ng-template #content2 let-modal>
+  <div class="modal-header modal-head">
+    <label>View rule</label>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="viewForm">
+      <div class="row">
+        <mat-form-field
+          appearance="outline"
+          style="width: 35%; margin-left: 4%"
+        >
+          <mat-label>Name</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="rulename"
+            placeholder="Rule name*"
+          />
+        </mat-form-field>
+        <mat-form-field
+          appearance="outline"
+          style="margin-left: 6%; width: 51%"
+        >
+          <mat-label>Description</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="description"
+            placeholder="Description"
+          />
+        </mat-form-field>
+      </div>
+      <div>
+        <div class="row">
+          <div class="col-sm-6">
+            <mat-form-field
+              class="example-full-width"
+              style="width: 37%; margin-left: 3%"
+              appearance="outline"
+            >
+              <div class="form-group">
+                <input
+                  matInput
+                  type="time"
+                  class="form-control-x-sm form-control-x-sm"
+                  formControlName="starttime"
+                  placeholder="{{ 'Desde' | translate }}:"
+                />
+              </div>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-6">
+            <mat-form-field
+              class="example-full-width"
+              style="width: 37%; margin-left: -60%"
+              appearance="outline"
+            >
+              <div class="form-group">
+                <input
+                  matInput
+                  type="time"
+                  class="form-control-x-sm form-control-x-sm"
+                  formControlName="endtime"
+                  placeholder="{{ 'Hasta' | translate }}:"
+                />
+              </div>
+            </mat-form-field>
+            <mat-radio-group
+              aria-label="Select an option"
+              style="margin-left: 12%"
+            >
+              <mat-radio-button id="flexRadioDefault2" value="1" checked disabled>
+                Disable tracking
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="brd-top-bottom">
+        <div class="row">
+          <div class="col-md-12">
+            <mat-radio-group formControlName="mtype" #rGroup aria-disabled="true">
+              <mat-radio-button
+                value="days"
+                radioGroup="rGroup"
+                style="margin-left: 2%"
+              >
+                Days
+              </mat-radio-button>
+              <mat-radio-button
+                value="week"
+                radioGroup="rGroup"
+                style="margin-left: 22%"
+              >
+                Week
+              </mat-radio-button>
+              <mat-radio-button
+                value="dates"
+                radioGroup="rGroup"
+                style="margin-left: 20%"
+              >
+                Dates
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <!--/row-->
+      </div>
+      <!--/brd-top-bottom-->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="checkbox1 row" *ngIf="editForm.value.mtype == 'days'">
+            <section class="inlins-name" 
+                     style="margin-right:2%; margin-bottom: 4%;"
+                      *ngFor="let item of days">
+              <mat-checkbox
+                #check
+                [checked]="ddata.indexOf(item) >= 0"
+                (change)="onChange(item, check.checked)"
+                value="item.name"
+                disabled
+                >{{ item.name }}</mat-checkbox
+              >
+            </section>
+          </div>
+          <div class="checkbox" *ngIf="editForm.value.mtype == 'week'">
+            <label class="inlins-name">
+              <input
+                type="radio"
+                formControlName="weekdays"
+                value="week days"
+              /><span class="radio_span" style="font-size: 15px"
+                >Week days</span
+              >
+            </label>
+            <label class="inlins-name">
+              <input
+                type="radio"
+                formControlName="weekend"
+                style="margin-right: 5px; margin-left: 5px"
+                value="weekend"
+              /><span class="radio_span" style="font-size: 15px">Weekends</span>
+            </label>
+          </div>
+          <div
+            class="checkbox col-md-5"
+            *ngIf="editForm.value.mtype == 'dates'"
+          >
+            <div class="row mt-6">
+              <div class="col-6 col-md-2" style="padding-top: 14px">
+                <datepicker
+                  [dateIn]="data2.log_date"
+                  (dateOut)="data2.log_date = $event"
+                ></datepicker>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      class="btn btn-outline-danger mr-2 btn-form"
+      type="button"
+      (click)="cancelView()"
+      translate
+    >
+      {{ "Cancelar" | translate }}
+    </button>
+  </div>
+</ng-template>

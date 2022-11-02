@@ -1,0 +1,25 @@
+
+  .example-section {
+    display: flex;
+    align-content: space-around;
+    align-items: center;
+    height: 60px;
+  }
+
+  ::ng-deep .mat-checkbox-inner-container {
+    height: 20px!important;
+    width: 20px!important;
+  }
+  
+  ::ng-deep .modal-content {
+    width: 125%!important;
+  }
+
+  .checkbox1{
+    font-size: 15px;
+    margin: 2px 8px auto 0 !important;
+}
+
+::ng-deep .input-size{
+  display: none !important;
+}

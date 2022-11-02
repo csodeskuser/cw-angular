@@ -1,0 +1,294 @@
+<loading [loadingIn]="loading"></loading>
+
+<div class="card p-5">
+  <div class="row">
+    <div class="col-12 col-lg-4">
+      <button class="btn btn-sm btn-secondary mr-5" (click)="filtered=!filtered">
+        {{'Filtros'|translate}} >>
+      </button> 
+      <div class="btn-group">
+        <button 
+          class="btn btn-secondary btn-sm" 
+          (click)="changeFormat('decimal')"
+          [class.active-group]="format=='decimal'"
+          style="width: 72px;"
+        >
+          {{'Decimal'|translate}}
+        </button>               
+        <button 
+          class="btn btn-secondary btn-sm" 
+          (click)="changeFormat('hour')"
+          [class.active-group]="format=='hour'"
+          style="width: 72px;"
+        >
+          {{'Horas'|translate}}
+        </button>
+     </div>  
+    </div>
+    <div class="col-12 col-lg-4 text-center">
+      <div class="btn-group" role="group">
+        <button (click)="addDate(-1)" style="padding-left: 0px;" class="btn">
+          <i class="fa fa-chevron-left"></i>
+        </button>
+        <div class="text-center" style="padding-top: 8px;">
+           <span class="dates-period">{{startDateTxt}} - {{endDateTxt}}</span>
+        </div>
+        <button (click)="addDate(1)" style="padding-right: 0px;" class="btn">
+          <i class="fa fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4 text-right">
+      <div style="display: inline-block;">
+        <select [(ngModel)]="nResults" class="form-control form-control-sm w-100px mr-5">
+          <option *ngFor="let item of optionNResults">{{item}}</option>
+        </select>      
+      </div>      
+      <div style="display: inline-block;">
+        <button class="btn p-0">
+          <i class="fa fa-question-circle"></i>
+        </button>        
+        <button class="btn btn-secondary btn-print mr-2">
+          <i class="fa fa-file-pdf"></i>
+        </button>
+        <button class="btn btn-secondary btn-print">
+          <i class="fa fa-file-excel"></i>
+        </button>        
+      </div>
+    </div>
+  </div>
+  <div class="row mt-6">
+    <div class="col-12 col-lg-6">
+      <filter-report *ngIf="filtered" (filter)="filter=$event"></filter-report>      
+    </div>
+    <div class="col-12 col-lg-6 text-right div-beside-filter">
+      <time-periods [typeReportIn]="typeReport" (typeReportOut)="changePeriod($event)"></time-periods>
+    </div>    
+  </div>
+</div>
+
+<category-buttons 
+  [categories]="config.listCategories" 
+  [selectedsIn]="categorySelecteds"
+  (selectedsOut)="categorySelecteds=$event"
+  mode=2
+>
+</category-buttons>
+
+<div class="card p-5 mt-5">
+  <div class="row" style="margin-top:10px">
+    <div style="font-weight: bold; display: inline-block; border-left: 3px solid red;" class="col-12 ml-5">{{'Promedio Productividad'|translate}}</div>
+    <div class="col-12 table-responsive">
+       <table class="table table-borderless" style="font-size: 12px;">
+          <thead>
+             <tr class="text-center">
+                <th translate></th>
+                <th translate>{{'Usuarios'|translate}}</th>
+                <th 
+                  style="text-transform:capitalize; width: 100px;" 
+                  *ngFor="let date of txtListDate" translate
+                >
+                  {{date}}
+                </th>
+                <th translate>Total</th>
+             </tr>
+          </thead>
+          <tbody *ngIf="!data.length">
+             <tr>
+                <td colspan="10" class="text-center">
+                   <p style="margin:0px" translate>
+                      {{'No hay registros'|translate}}
+                   </p>
+                </td>
+             </tr>
+          </tbody>
+          <tbody *ngFor="let user of data; let i=index">
+             <tr>
+                <td rowspan="2">{{i+1}}</td>
+                <td rowspan="2" width="20%">
+                  <img 
+                    style="margin-right: 10px; border-radius: 50px;" 
+                    alt="image" 
+                    width="30" 
+                    [title]="user.name" 
+                    height="30" 
+                    class="img-circle" 
+                    [src]="apiRoot+'/profile/'+user.id+'/avatar'"
+                    *ngIf="typeReport=='weekly'"
+                  >
+                    {{user.name}}
+                  </td>
+                <td [attr.colspan]="listDate.length" style="position:relative;padding: 5px;">
+                  <div class="progress">
+                     <div 
+                        [style.width]="totalPercent(getTimeUser(user.id, 1))"
+                        style="background: #22b14c" 
+                     >
+                     </div>
+                  </div>
+                  <div 
+                     class="line-time-avg" 
+                     title="Promedio Productividad {{avgLineNumber.toFixed(2)}} {{'horas'|translate}}" 
+                     [style.left]="avgLineString"
+                  >                  
+                  </div>
+                </td>
+                <td></td>
+             </tr>
+             <tr class="text-center">
+                <td *ngFor="let date of listDate" style="width: 100px;">
+                  <span>{{getTime(date, user.id)}}</span>
+                </td>
+                <td>
+                   <span>{{getTimeUser(user.id, 0)}}</span>
+                </td>
+             </tr>
+          </tbody>
+          <tbody>
+            <tr>
+               <td></td>
+               <td class="footer-total">
+                  <b translate> {{'Total'|translate}}</b>
+               </td>
+               <td class="footer-total" *ngFor="let date of listDate">
+                  <b>{{getTimeDate(date)}}</b>
+               </td>
+               <td class="footer-total">
+                  <b>{{getTimeTotal()}}</b>
+               </td>
+            </tr>
+          </tbody>
+       </table>
+    </div>
+    <!--<div class="col-md-12 cont_table_report table-responsive" ng-if="vm.typeReport == 'monthly'" style="overflow-x:scroll">
+       <table class="table table-borderless dataTables-example dataTable">
+          <thead>
+             <tr>
+                <td translate></td>
+                <td translate>{{vm.languagetrans.worked_time.users && vm.languagetrans.worked_time.users|| 'Usuarios'|translate}}</td>
+                <td style="text-transform:capitalize" ng-repeat="date in vm.txtListDate">{{date}}</td>
+                <td translate>{{vm.languagetrans.worked_time.total && vm.languagetrans.worked_time.total|| 'Total'|translate}}</td>
+             </tr>
+          </thead>
+          <tbody ng-if="vm.data.length == 0 && vm.loadReport == false">
+             <tr>
+                <td colspan="{{vm.numDaysMonth}}" class="text-center">
+                   <p style="margin:0px" translate>
+                      {{vm.languagetrans.worked_time.no_record && vm.languagetrans.worked_time.no_record|| 'No hay registros'|translate}}
+                   </p>
+                </td>
+             </tr>
+          </tbody>
+          <tbody ng-if="vm.loadReport">
+             <tr>
+                <td colspan="{{vm.numDaysMonth}}" class="text-center">
+                   <i class="fa fa-spinner fa-spin"></i>
+                </td>
+             </tr>
+          </tbody>
+          <tbody ng-if="vm.loadReport == false" ng-repeat="user in vm.data | orderBy: '-totalTime'">
+             <tr>
+                <td rowspan="2">{{$index+1}}</td>
+                <td rowspan="2" width="20%" ng-class="{'silent':user.usermode=='1'}">{{user.name}}</td>
+                <td colspan="{{vm.numDaysMonth}}" style="position:relative;padding: 5px;">
+                   <div class="progress progress-mini">
+                      <div style="width: {{vm.totalPercent(user.totalTime)}};background: #22b14c" class="progress-bar"></div>
+                   </div>
+                   <div class="line_time_avg" tooltip-placement="top" uib-tooltip="Promedio Productividad {{vm.avgLineNumber}} hours" style="left:{{vm.avgLineString}};"></div>
+                </td>
+                <td></td>
+             </tr>
+             <tr>
+                <td ng-repeat="fecha in vm.listDate">
+                   <span>{{vm.searchDay(fecha,user,$index,'hours')}}</span>
+                </td>
+                <td>
+                   <span ng-if="vm.format==1">{{user.totalTime.toFixed(2)}}</span>
+                   <span ng-if="vm.format==2">{{vm.minTommss(user.totalTime)}}</span>                        
+                </td>
+             </tr>
+          </tbody>
+          <tbody>
+             <tr>
+                <td></td>
+                <td class="footer__total_t">
+                   <b>Total</b>
+                </td>
+                <td class="footer__total_t" ng-repeat="fecha in vm.listDate">
+                   <b>{{vm.totalPerDay($index)}}</b>
+                </td>
+                <td class="footer__total_t">
+                   <b ng-if="vm.format==1">{{vm.allUserTime}}</b>
+                   <b ng-if="vm.format==2">{{vm.minTommss(vm.allUserTime)}}</b>
+                </td>
+             </tr>
+          </tbody>
+       </table>
+    </div>
+    <div class="col-md-12 cont_table_report table-responsive" ng-if="vm.typeReport == 'yearly'">
+       <table class="table table-borderless dataTables-example dataTable">
+          <thead>
+             <tr>
+                <td translate></td>
+                <td translate>{{vm.languagetrans.worked_time.users && vm.languagetrans.worked_time.users|| 'Usuarios'|translate}}</td>
+                <td style="text-transform:capitalize" ng-repeat="date in vm.txtListDate">{{date}}</td>
+                <td translate>{{vm.languagetrans.worked_time.total && vm.languagetrans.worked_time.total|| 'Total'|translate}}</td>
+             </tr>
+          </thead>
+          <tbody ng-if="vm.data.length == 0 && vm.loadReport == false">
+             <tr>
+                <td colspan="14" class="text-center">
+                   <p style="margin:0px" translate>
+                      {{vm.languagetrans.worked_time.no_record && vm.languagetrans.worked_time.no_record|| 'No hay registros'|translate}}
+                   </p>
+                </td>
+             </tr>
+          </tbody>
+          <tbody ng-if="vm.loadReport">
+             <tr>
+                <td colspan="14" class="text-center">
+                   <i class="fa fa-spinner fa-spin"></i>
+                </td>
+             </tr>
+          </tbody>
+          <tbody ng-if="vm.loadReport == false" ng-repeat="user in vm.data | orderBy: '-totalTime'">
+             <tr>
+                <td rowspan="2">{{$index+1}}</td>
+                <td rowspan="2" width="20%" ng-class="{'silent':user.usermode=='1'}">{{user.name}} </td>
+                <td colspan="12" style="position:relative;padding: 5px;">
+                   <div class="progress progress-mini">
+                      <div style="width: {{vm.totalPercent(user.totalTime)}};background: #22b14c" class="progress-bar"></div>
+                   </div>
+                   <div class="line_time_avg" tooltip-placement="top" uib-tooltip="Promedio Productividad {{vm.avgLineNumber}} hours" style="left:{{vm.avgLineString}};"></div>
+                </td>
+                <td></td>
+             </tr>
+             <tr>
+                <td ng-repeat="fecha in vm.listDate">
+                   <span>{{vm.searchDay(fecha,user,$index,'hours')}}</span>
+                </td>
+                <td>
+                   <span ng-if="vm.format==1">{{user.totalTime.toFixed(2)}}</span>
+                   <span ng-if="vm.format==2">{{vm.minTommss(user.totalTime)}}</span>
+                </td>
+             </tr>
+          </tbody>
+          <tbody>
+             <tr>
+                <td></td>
+                <td class="footer__total_t">
+                   <b translate>{{vm.languagetrans.worked_time.total && vm.languagetrans.worked_time.total|| 'Total'|translate}}</b>
+                </td>
+                <td class="footer__total_t" ng-repeat="fecha in vm.listDate">
+                   <b>{{vm.totalPerDay($index)}}</b>
+                </td>
+                <td class="footer__total_t">
+                   <b ng-if="vm.format==1">{{vm.allUserTime}}</b>
+                   <b ng-if="vm.format==2">{{vm.minTommss(vm.allUserTime)}}</b>
+                </td>
+             </tr>
+          </tbody>
+       </table>
+    </div>-->
+  </div>
+</div>

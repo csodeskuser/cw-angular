@@ -1,0 +1,6 @@
+<button 
+  class="btn btn-sm btn-options" 
+  [class.btn-secondary]="option==option1Val" 
+  [class.btn-danger]="option==option2Val" 
+  (click)="change()"
+>{{optionTxt}}</button>

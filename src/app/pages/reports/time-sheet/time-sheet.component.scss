@@ -1,0 +1,27 @@
+.active-group {
+    background-color: blue!important;
+  }
+  
+  .dates-period {
+    font-weight: 500;
+    font-size: 17px; 
+    color: #181C32;
+  }
+  
+  .progress {
+    height: 5px!important;
+  }
+  
+  thead tr th {
+    font-size: 10px;
+  }
+  
+  .line-time-avg {
+    color: red;
+    width: 3px;
+    background: #d23636;
+    height: 20px;
+    top: 1px;
+    border-radius: 3px;
+    position: absolute;
+  }

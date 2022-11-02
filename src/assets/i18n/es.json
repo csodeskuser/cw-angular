@@ -1,0 +1,25 @@
+{
+  "es": {
+    "Agregar Tiempo Manual": "Agregar Tiempo Manual",
+    "Actividad por Usuario": "Actividad por Usuario",
+    "Uso de Aplicaciones": "Uso de Aplicaciones",
+    "Tiempo Trabajado": "Tiempo Trabajado",
+    "Capturas de Pantalla": "Capturas de Pantalla",
+    "Reportes de Productividad": "Reportes de Productividad",   
+    "Usuarios": "Usuarios",
+    "Grupos de Usuarios": "Grupos de Usuarios",
+    "Ventana de Tiempo": "Ventana de Tiempo",
+    "Configuración de Seguridad": "Configuración de Seguridad",
+    "Aplicaciones": "Aplicaciones",
+    "Grupos de Aplicaciones": "Grupos de Aplicaciones",
+    "Empresas Involucradas": "Empresas Involucradas",
+    "Roles": "Roles",
+    "Configuración de Cliente": "Configuración de Cliente",
+    "Colector de Logs": "Colector de Logs",
+    "Papelera": "Papelera",
+    "Pagos Recibidos": "Pagos Recibidos",
+    "TRANSLATOR": {
+      "SELECT": "Elige tu idioma"
+    }
+  }
+}

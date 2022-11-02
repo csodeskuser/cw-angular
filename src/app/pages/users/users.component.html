@@ -1,0 +1,720 @@
+<loading [loadingIn]="loading"></loading>
+
+<div class="card p-5">
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="search"
+          placeholder="{{ 'Usuarios' | translate }}"
+        />
+
+        <div class="input-group-append">
+          <button class="btn btn-secondary" (click)="search()" type="submit">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <button class="btn btn-secondary mr-2" (click)="addUser(content)">
+        <i class="fa fa-plus" ></i>&nbsp;<b>{{ "Añadir nuevo usuario" | translate }}</b>
+      </button>
+      <button class="btn btn-secondary" (click)="importexcel(content2)">
+        <i class="fa fa-plus" ></i>&nbsp;<b>{{ "Importar Excel" | translate }}</b>
+      </button>
+    </div>
+    <button class="btn p-0" style="margin-left: 30%" (click)="help(helpContent)">
+      <i class="fa fa-question-circle" style='color:#e1e1ed'></i>
+    </button>   
+  </div>
+  
+  <!-- <hr /> -->
+
+  <div class="table-responsive" style="margin-top: 2%">
+    <table class="table table-striped" >
+      <thead >
+        
+        <tr class="headings_tr" >
+          <th>#</th>
+          <th style="width: 10px"></th>
+          <th translate>{{ "Usuarios" | translate }}</th>
+          <th translate>{{ "Correo electrónico" | translate }}</th>
+          <th translate >{{ "Rol" | translate }}</th>
+          <th translate >
+            {{ "Grupos" | translate }}
+          </th>
+          <th translate style="text-align: center">
+            {{ "Tarifa por Hora" | translate }}
+          </th>
+          <!-- <th translate style="text-align: center">
+            {{ "Límite Semanal (Horas)" | translate }}
+          </th> -->
+          <th style="text-align: center" translate>
+            {{ "Primera Conexión" | translate }}
+          </th>
+          <th style="text-align: center" translate>
+            {{ "Ultima Conexión" | translate }}
+          </th>
+          <th translate style="text-align: center">
+            {{ "Estatus de Usuario" | translate }}
+          </th>
+          <th translate style="text-align: center">
+            {{ "Modo del Agente" | translate }}
+          </th>
+          <th translate style="text-align: center">
+            {{ "Capturas de Pantalla" | translate }}
+          </th>
+          <th style="text-align: center">{{ "Acciones" | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of users; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <img
+              alt="image"
+              class="img-circle"
+              [src]="
+                'https://app.clowdwork.com/api/v1/profile/' +
+                item.id +
+                '/avatar'
+              "
+              style="width: 25px; height: 25px"
+            />
+          </td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.email }}</td>
+          <td >{{item.rolename}}</td>
+          <td><span *ngIf="item.relationships.group">{{item.relationships.group.name}}</span>
+            <span *ngIf="!item.relationships.group">N/A</span></td>
+          <!-- item.relationships.group.name      -->
+          <td><span *ngIf="!item.cost_per_hour">0.00</span>{{ item.cost_per_hour }}</td>
+          <!-- <td><span *ngIf="!item.limit_per_week">0.00</span>{{ item.limit_per_week }}</td> -->
+          <td>{{ item.first_report }}</td>
+          <td>{{ item.last_login }}</td>
+          <td>
+            <button-options
+              [option1Txt]="'Activado' | translate"
+              [option2Txt]="'Desactivado' | translate"
+              [option1Val]="1"
+              [option2Val]="0"
+              (click)="statusChange(item.id)"
+              [optionIn]="item.status"
+              (optionOut)="($event)"
+            ></button-options>
+          </td>
+          <td>
+            <button-options
+              [option1Txt]="'Interactivo' | translate"
+              [option2Txt]="'Silencioso' | translate"
+              [option1Val]="1"
+              [option2Val]="0"
+              (click)="silentStatus(item.relationships.user_agent_configuration.id)"
+              [optionIn]="item.relationships.user_agent_configuration.silent_mode"
+              (optionOut)="($event)"
+            ></button-options>
+          </td>
+          <td>
+            <button-options
+              [option1Txt]="'Activado' | translate"
+              [option2Txt]="'Desactivado' | translate"
+              [option1Val]="1"
+              [option2Val]="0"
+              (click)="screenStatus(item.relationships.user_agent_configuration.id)"
+              [optionIn]="item.relationships.user_agent_configuration.screenshots_enabled"
+              (optionOut)="($event)"
+            ></button-options>
+          </td>
+          <td>
+            <a
+              href="javascript:;"
+              (click)="editUser(content1, item.id)"
+              title="{{ 'Editar' | translate }}"
+            >
+              <i class="fa fa-pencil fa-2x mr-1 btn-outline-primary"></i>
+            </a>
+            <a href="javascript:;" *permission="'user_group_access'" title="{{ 'Grupos' | translate }}" (click)="addGroup(content4, item.id)">
+              <i class="fa fa-users fa-2x mr-1 btn-outline-primary"></i>
+            </a>
+            <a
+            *ngIf="item.id !=='0dfdf781-ed44-4a3b-b783-841a651146ca'"
+              mwlConfirmationPopover
+              [popoverTitle]="
+                '¿Quieres eliminar este usuario de forma permanente?'
+                  | translate
+              "
+              [confirmText]="'Si' | translate"
+              [cancelText]="'No' | translate"
+              [placement]="'left'"
+              (confirm)="delete(item.id)"
+              ><i class="fa fa-trash fa-2x mr-1 btn-outline-danger" ></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="text-right">
+    <pagination 
+      [pageSize]="filter.perPage" 
+      [page]="filter.page" 
+      [collectionSize]="filter.collectionSize" 
+      (paginationOut)="setPagination($event)">
+    </pagination>
+  </div>
+</div>
+
+<!--Modal crear usuario-->
+<ng-template #content let-modal>
+  <div class="modal-header modal-head">
+    <label>{{ "Usuario nuevo" | translate }}</label>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="overflow: auto">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label translate>{{ "Correo electrónico" | translate }} *</label>
+        <input
+          type="email"
+          formControlName="email"
+          class="form-control form-control-sm"
+          placeholder="Email"
+          [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+        />
+        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+          <div *ngIf="f['email'].errors['required']">{{ "correo electronico es requerido" | translate}}</div>
+          <div *ngIf="f['email'].errors['email']">{{ "el correo electrónico es invalido" | translate}}</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label translate>{{ "Nombre" | translate }} *</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          formControlName="name"
+          placeholder="{{ 'Nombre' | translate }}"
+          [ngClass]="{ 'is-invalid': submitted && f['name'].errors }"
+        />
+        <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+          <div *ngIf="f['name'].errors['required']">{{ "Se requiere el nombre" | translate }}</div>
+          <div *ngIf="f['name'].errors['minlength']">
+            {{ "El nombre debe tener al menos 3 caracteres" | translate}}
+          </div>
+          <div *ngIf="f['name'].errors['maxlength']">
+            {{ "El nombre no debe exceder los 30 caracteres" | translate}}
+          </div>
+        </div>
+        </div>
+
+        <div class="form-group">
+          <label translate>{{ "Grupos de Usuarios" | translate }} *</label>
+          <select
+            formControlName="usergroup_id"
+            class="form-control form-control-sm"
+            [ngClass]="{ 'is-invalid': submitted && f['usergroup_id'].errors }"
+            >
+            <option *ngFor="let item of userGroup" [ngValue]="item.id">
+              {{ item.name }}
+            </option>
+          </select>
+          <div *ngIf="submitted && f['usergroup_id'].errors" class="invalid-feedback">
+            <div *ngIf="f['usergroup_id'].errors['required']">{{ "se requiere grupo de usuarios" | translate }}</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label translate>{{ "Rol" | translate }} *</label>
+          <select
+            formControlName="role_id"
+            class="form-control form-control-sm"
+          >
+            <option *ngFor="let item of roles" [ngValue]="item.id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- <div class="form-group">
+          <label translate>{{ "Estado" | translate}} *</label>
+          <select
+            formControlName="status"
+            class="form-control form-control-sm"
+            [ngClass]="{ 'is-invalid': submitted && f['status'].errors }"
+          >
+            <option value="1">{{ "Activo" | translate}}</option>
+            <option value="0">{{ "Inactivo" | translate}}</option>
+          </select>
+          <div
+            *ngIf="submitted && f['status'].errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f['status'].errors['required']">{{ "Se requiere estado" | translate}}</div>
+          </div>
+        </div> -->
+
+
+        <div class="form-group">
+          <label translate>{{ "Tarifa por Hora" | translate }}</label>
+          <input
+            type="number"
+            class="form-control form-control-sm"
+            formControlName="productionHr"
+            placeholder="{{ 'Tarifa por Hora' | translate }}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label translate>SID<p style="color: rgb(163, 163, 163);">{{ '(Solo para despliegues con Microsoft Active Directory)' | translate}}</p></label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="sid"
+            placeholder="SID(optional)"
+          />
+          </div>
+
+
+        <!-- <div class="form-group">
+          <label translate>{{ "Límite Semanal (Horas)" | translate }}</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="Weeklylimit"
+            placeholder="{{ 'Límite Semanal (Horas)' | translate }}"
+            [ngClass]="{ 'is-invalid': submitted && f['Weeklylimit'].errors }"
+          />
+          <div
+            *ngIf="submitted && f['Weeklylimit'].errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f['Weeklylimit'].errors['required']">
+              {{ "Se requiere límite semanal" | translate}}
+            </div>
+          </div>
+        </div> -->
+
+        <div class="form-group">
+          <label translate>{{ "Contraseña" | translate }} *</label>
+          <div class="input-group">
+            <input
+              [type]="showpassword ? 'text' : 'password'"
+              class="form-control form-control-sm"
+              placeholder="{{ 'Contraseña' | translate }}"
+              formControlName="password"
+              autocomplete="new-password"
+              [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-outline-info btn-sm"
+                type="button"
+                (click)="showpassword = !showpassword"
+              >
+                <i class="fa fa-eye"></i>
+              </button>
+            </div>
+            <div
+              *ngIf="submitted && f['password'].errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f['password'].errors['required']">
+                {{ "se requiere contraseña" | translate}}
+              </div>
+              <div *ngIf="f['password'].errors['minlength']">
+                {{ "La contraseña debe tener al menos 6 caracteres" | translate}}
+              </div>
+              <div *ngIf="f['password'].errors['maxlength']">
+                {{ "La contraseña no debe exceder los 20 caracteres" | translate}}
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="form-group">
+          <label translate>{{ "Repita la contraseña" | translate}} *</label>
+          <div class="input-group">
+            <input
+              [type]="showpassword ? 'text' : 'password'"
+              class="form-control form-control-sm"
+              placeholder="{{ 'Contraseña' | translate }}"
+              formControlName="rpassword"
+              autocomplete="new-password"
+              [ngClass]="{ 'is-invalid': submitted && f['rpassword'].errors }"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-outline-info btn-sm"
+                type="button"
+                (click)="showpassword = !showpassword"
+              >
+                <i class="fa fa-eye"></i>
+              </button>
+            </div>
+            <div
+              *ngIf="submitted && f['password'].errors"
+              class="invalid-feedback"
+            >
+              <div *ngIf="f['rpassword'].errors['required']">
+                {{ "Se requiere repetir la contraseña" | translate}}
+              </div>
+              <div *ngIf="f['rpassword'].errors['matching']">
+                {{ "Repetir la contraseña no coincide con la contraseña" | translate}}
+              </div>
+            </div>
+          </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      class="btn btn-outline-danger mr-2 btn-form"
+      type="button"
+      (click)="cancel()"
+      translate
+    >
+      {{ "Cancelar" | translate }}
+    </button>
+    <button
+      ladda="vm.isloading"
+      class="btn btn-outline-secondary btn-form"
+      (click)="onSubmit()"
+      type="submit"
+      translate
+    >
+      {{ "Crear" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+<!--Modal edit usuario-->
+<ng-template #content1 let-modal>
+  <div class="modal-header modal-head">
+    <label>{{ "editar usuario" | translate }}</label>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="overflow: auto">
+    <form [formGroup]="editForm" (ngSubmit)="onSubmitEdit()">
+      <div class="form-group">
+        <label translate>{{ "Correo electrónico" | translate }} *</label>
+        <input
+          type="text"
+          formControlName="email"
+          class="form-control form-control-sm"
+          placeholder="Email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label translate>{{ "Nombre" | translate }} *</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          formControlName="name"
+          placeholder="Name"
+          [ngClass]="{ 'is-invalid': submitted1 && f1['name'].errors }"
+        />
+        <div *ngIf="submitted1 && f1['name'].errors" class="invalid-feedback">
+          <div *ngIf="f1['name'].errors['required']">{{ "Se requiere el nombre" | translate }}</div>
+          <div *ngIf="f1['name'].errors['minlength']">
+            {{ "El nombre debe tener al menos 3 caracteres" | translate}}
+          </div>
+          <div *ngIf="f1['name'].errors['maxlength']">
+            {{ "El nombre no debe exceder los 30 caracteres" | translate}}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label translate>{{ "Grupos de Usuarios" | translate }}</label>
+        <select
+          formControlName="usergroup_id"
+          class="form-control form-control-sm"
+          [ngClass]="{ 'is-invalid': submitted1 && f1['usergroup_id'].errors }"
+        >
+        <div *ngIf="submitted1 && f1['usergroup_id'].errors" class="invalid-feedback">
+          <div *ngIf="f1['usergroup_id'].errors['required']">{{ "se requiere grupo de usuarios" | translate }}</div>
+        </div>
+          <option *ngFor="let item of userGroup" [ngValue]="item.id">
+            {{ item.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label translate>{{ "Rol" | translate }} *</label>
+        <select
+          formControlName="role_id"
+          class="form-control form-control-sm"
+          [ngClass]="{ 'is-invalid': submitted1 && f1['role_id'].errors }"
+        >
+        <div *ngIf="submitted1 && f1['role_id'].errors" class="invalid-feedback">
+          <div *ngIf="f1['role_id'].errors['required']">{{ "se requiere rol" | translate }}</div>
+          </div>
+          <option *ngFor="let item of roles" [ngValue]="item.id">
+            {{ item.name }}
+          </option>
+  
+        </select>
+      </div>
+
+      <!-- <div class="form-group">
+        <label translate>{{ "Estado" | translate}} *</label>
+        <select
+          formControlName="status"
+          class="form-control form-control-sm"
+          [ngClass]="{ 'is-invalid': submitted && f['status'].errors }"
+        >
+          <option value="1">{{ "Activo" | translate}}</option>
+          <option value="0">{{ "Inactivo" | translate}}</option>
+        </select>
+        <div
+          *ngIf="submitted && f['status'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="f['status'].errors['required']">{{ "Se requiere estado" | translate}}</div>
+        </div>
+      </div> -->
+
+
+      <div class="form-group">
+        <label translate>{{ "Tarifa por Hora" | translate }}</label>
+        <input
+          type="number"
+          class="form-control form-control-sm"
+          formControlName="productionHr"
+          placeholder="{{ 'Tarifa por Hora' | translate }}"
+          [ngClass]="{ 'is-invalid': submitted1 && f1['productionHr'].errors }"
+        />
+        <div
+          *ngIf="submitted1 && f1['productionHr'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="f1['productionHr'].errors['required']">
+            {{ "Se requiere tarifa por hora" | translate}}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label translate>SID<p style="color: rgb(163, 163, 163);">{{ '(Solo para despliegues con Microsoft Active Directory)' | translate}}</p></label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          formControlName="sid"
+          placeholder="SID(optional)"
+        />
+        </div>
+
+      <!-- <div class="form-group">
+        <label translate>{{ "Límite Semanal (Horas)" | translate }}</label>
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          formControlName="Weeklylimit"
+          placeholder="{{ 'Límite Semanal (Horas)' | translate }}"
+          [ngClass]="{ 'is-invalid': submitted1 && f1['Weeklylimit'].errors }"
+        />
+        <div
+          *ngIf="submitted1 && f1['Weeklylimit'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="f1['Weeklylimit'].errors['required']">
+            {{ "Se requiere límite semanal" | translate}}
+          </div>
+        </div>
+      </div> -->
+
+      <div class="form-group">
+        <label translate>{{ "Introduce la contraseña para actualizar" | translate}} *</label>
+        <div class="input-group">
+          <input
+            [type]="showpassword ? 'text' : 'password'"
+            class="form-control form-control-sm"
+            placeholder="{{ 'Contraseña' | translate }}"
+            formControlName="password"
+            autocomplete="new-password"
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-outline-info btn-sm"
+              type="button"
+              (click)="showpassword = !showpassword"
+            >
+              <i class="fa fa-eye"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      class="btn btn-outline-danger mr-2 btn-form"
+      type="button"
+      (click)="editCancel()"
+      translate
+    >
+      {{ "Cancelar" | translate }}
+    </button>
+    <button
+      ladda="vm.isloading"
+      class="btn btn-outline-secondary"
+      (click)="onSubmitEdit()"
+      type="submit"
+      translate
+    >
+      {{ "Actualizar usuario" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+
+<!-- import excel -->
+
+<ng-template #content2 let-modal>
+  <div class="modal-header modal-head">
+    <label>{{ "Importar Excel" | translate}}</label>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="overflow: auto">
+    <form [formGroup]="excelFile" (ngSubmit)="onImport()">
+      
+      <div class="form-group">
+        <label translate>{{ "Archivo Excel" | translate}} *</label>
+        <input
+          type="file"
+          class="form-control form-control-sm"
+          formControlName="file"
+          (change)="onFileChange($event)"
+        />
+            </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      class="btn btn-outline-danger mr-2 btn-form"
+      type="button"
+      (click)="cancel()"
+      translate
+    >
+      {{ "Cancelar" | translate }}
+    </button>
+    <button
+      ladda="vm.isloading"
+      class="btn btn-outline-secondary btn-form"
+      (click)="onImport()"
+      type="submit"
+      translate
+    >
+     {{ "Importar" | translate}}
+    </button>
+  </div>
+</ng-template>
+
+<!-- add group -->
+
+<ng-template #content4 let-modal>
+  <div class="modal-header modal-head">
+    <label>{{ "Agregar grupos adicionales" | translate}}</label>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="overflow: auto">
+    <form [formGroup]="grpForm" (ngSubmit)="onSubmitGroup()">
+      <div class="form-group">
+        <ng-select
+          [items]="grupos"
+          placeholder="Select groups"
+          appendTo="body"
+          multiple="true"
+          formControlName="groups"
+          [(ngModel)]="selectedgrupos"
+          [ngClass]="{ 'is-invalid': submitted2 && f3['groups'].errors }"
+        >
+        </ng-select>
+        <div
+          *ngIf="submitted2 && f3['groups'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="f3['groups'].errors['required']">
+            {{ "Seleccione al menos un grupo" | translate}}
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      class="btn btn-outline-danger mr-2 btn-form"
+      type="button"
+      (click)="closegroup()"
+      translate
+    >
+      {{ "Cancelar" | translate }}
+    </button>
+    <button
+      ladda="vm.isloading"
+      class="btn btn-outline-secondary btn-form"
+      (click)="onSubmitGroup()"
+      type="submit"
+      translate
+    >
+      {{ "Crear" | translate }}
+    </button>
+  </div>
+</ng-template>
+
+
+<!-- help model -->
+<ng-template #helpContent let-modal>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+      style="text-align:end; size: 5px;"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  <div class="modal-body" style="overflow: auto">
+    <p>The user settings can be easily managed on the platform.</p>
+    <div *ngIf="expanded" class="expand-modal">
+        <p>Users and the screenshot capture can be easily activated or deactivated as required by clicking on the relevant column.</p>
+    </div>
+    <i *ngIf="!expanded" (click)="expand()"><h5>More</h5></i>
+    <i *ngIf="expanded" (click)="expand()"><h5>Less</h5></i>
+  </div>
+</ng-template>

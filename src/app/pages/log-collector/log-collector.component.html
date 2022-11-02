@@ -1,0 +1,139 @@
+<loading [loadingIn]="loading"></loading>
+
+<div class="card p-5" >
+  <div class="row">
+    <div class="col-md-5">
+      <filter-report (filter)="filter($event)" [mode]=2></filter-report>
+    </div>
+
+    <div class="col-md-4 div-beside-filter" style="margin-left: -21%;">
+      <button class="btn btn-secondary mr-2" (click)="addLogCollector(content)">
+        <i class="fa fa-plus"></i>&nbsp;{{ "Añadir nuevo log" | translate }} 
+      </button>  
+    </div>
+  </div>
+  <div>
+  <div class="table-responsive mt-10">
+    <table class="table table-striped" *ngIf="logCollectors.length">
+      <thead>
+        <tr class="headings_tr">
+          <th translate class="text-center">{{ "Log Solicitado" | translate }}</th>
+          <th translate class="text-center">{{ "Fecha/Hora Solicitud" | translate }}</th>
+          <th class="text-center">{{ "Recibido" | translate }}</th>
+          <th class="text-center">{{ "Log agente" | translate }}</th>
+          <th class="text-center">{{ "Base de datos" | translate }}</th>
+          <th class="text-center">{{ "Monitor" | translate }}</th>
+          <th class="text-center">{{ "Descargar" | translate }}</th>
+          <th class="text-center">{{ "Eliminar" | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of logCollectors;">
+          <td translate class="text-center">{{formatDate(item.log_date, false)}}</td>          
+          <td translate class="text-center">{{formatDate(item.created_at, true)}}</td>
+          <td translate class="text-center">{{formatDate(item.updated_at, true)}}</td>
+          <td class="text-center">                
+            <i class="fa fa-2x" [ngClass]="{'fa-check-circle text-secondary': item.agent_log, 'fa-times text-danger': !item.agent_log}"></i>
+          </td>
+          <td class="text-center">
+            <i class="fa fa-2x" [ngClass]="{'fa-check-circle text-secondary': item.agent_log, 'fa-times text-danger': !item.agent_log}"></i>
+          </td>
+          <td class="text-center">
+            <i class="fa fa-2x" [ngClass]="{'fa-check-circle text-secondary': item.agent_log, 'fa-times text-danger': !item.agent_log}"></i>
+          </td>
+          <td class="text-center">
+            <a  *ngIf="item.file_path" title="Descargar" (click)="download(item.id)" target="_blank" download>
+              <i class="fa fa-download text-secondary fa-2x"></i> 
+            </a>
+          </td>
+          <td class="text-center">
+            <a 
+              href="javascript:;"
+              title="Eliminar"
+              mwlConfirmationPopover
+              [popoverTitle]="'¿Quieres eliminar este collector?'|translate" 
+              [confirmText]="'Si'|translate"
+              [cancelText]="'No'|translate"    
+              [placement]="'left'"          
+              (confirm)="delete(item.id)"
+            ><i class="fa fa-trash fa-2x text-warning"></i>
+            </a>             
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-right">
+    <pagination
+      [pageSize]="filter1.perPage"
+      [page]="filter1.page"
+      [collectionSize]="filter1.collectionSize"
+      (paginationOut)="setPagination($event)"
+    >
+    </pagination>
+  </div>
+</div>
+</div>
+
+
+<!--Modal crear log collector-->
+<ng-template #content let-modal>
+  <div class="modal-header modal-head">
+    <label>{{'Agregar recolección de log'|translate}}</label>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row form-group">
+      <label class="col-md-4 text-center" translate>{{'Fecha'}} *</label>
+      <div class="col-md-8">
+        <datepicker [dateIn]="data.log_date" (dateOut)="data.log_date=$event"></datepicker>
+      </div>        
+    </div>
+
+    <div class="row">
+      <div class="col-md-4"></div>
+      <div class="col-md-8">
+        <div class="icheck-secondary">          
+          <input 
+            type="checkbox" 
+            [id]="data.db_log"
+            [(ngModel)]="data.db_log" >
+          <label [for]="data.db_log"></label>
+          <label>DB Log</label>          
+        </div>        
+      </div>  
+      
+      <div class="col-md-4"></div>
+      <div class="col-md-8">
+        <div class="icheck-secondary">          
+          <input 
+            type="checkbox" 
+            [id]="data.agent_log"
+            [(ngModel)]="data.agent_log" >
+          <label [for]="data.agent_log"></label>
+          <label>Agent Log</label>          
+        </div>        
+      </div>  
+      
+      <div class="col-md-4"></div>
+      <div class="col-md-8">
+        <div class="icheck-secondary">          
+          <input 
+            type="checkbox" 
+            [id]="data.monitor_log"
+            [(ngModel)]="data.monitor_log" >
+          <label [for]="data.monitor_log"></label>
+          <label>Monitor Log</label>          
+        </div>        
+      </div>      
+    </div>
+
+    <div class="text-right mt-20">
+      <button class="btn btn-outline-danger mr-2 btn-form" type="button" (click)="modal.dismiss('Cross click')" translate >{{'Cancelar'|translate }}</button>
+      <button class="btn btn-outline-secondary btn-form" type="button" (click)="onSubmit(); modal.dismiss('Cross click')" translate>{{'Crear'|translate }}</button>
+    </div>
+  </div>  
+</ng-template>

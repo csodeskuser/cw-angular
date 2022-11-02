@@ -1,0 +1,22 @@
+table thead tr td {
+  font-size: 9px;
+  border: 0px!important;
+}
+
+::ng-deep .highcharts-button-symbol {
+  width: 30px !important;
+  height: 30px !important;
+
+}
+
+::ng-deep .tooltip-inner {
+  color: white;
+  background-color: #000000;
+  opacity:80% ;
+}
+
+::ng-deep .bs-tooltip-left .arrow::before,
+::ng-deep .bs-tooltip-auto[x-placement^='left'] .arrow::before {
+border-left-color: #000000 !important;
+opacity:80% ;
+}

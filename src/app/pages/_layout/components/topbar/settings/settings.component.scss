@@ -1,0 +1,10 @@
+.menu-settings {
+  overflow-y: auto; 
+  width: max-content;
+}
+
+@media only screen and (min-width: 992px) {
+  .menu-settings {
+    height: 320px;     
+  }
+}

@@ -1,0 +1,20 @@
+.loading-effect {
+  width: 200px;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+  transform: scale(1);
+  animation: pulse 1s infinite;  
+}
+
+@keyframes pulse {
+  0% {transform: scale(0.95);}
+  70% {transform: scale(1);}
+  100% {transform: scale(0.95);}
+}  
+
+.div-loading-effect {
+  z-index: 1000;
+  position: absolute;
+  top: 47.8%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

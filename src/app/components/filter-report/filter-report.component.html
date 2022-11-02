@@ -1,0 +1,32 @@
+<div class="row" *ngIf="mode==1">
+  <div class="col-12 col-md-4" *permission="'superadmin'">
+    <ng-select [(ngModel)]="enterpriseId" (change)="select()" [clearable]=false placeholder="Select enterprise">
+      <ng-option *ngFor="let item of enterprises" [value]="item.id">{{item.name}}</ng-option>
+    </ng-select>  
+  </div>
+  <div class="col-12 col-md-5">
+    <ng-select [(ngModel)]="groupId" (change)="select()" [clearable]=false placeholder="Select group">
+      <ng-option *ngFor="let item of groups" [value]="item.uuid">{{item.name}}</ng-option>
+    </ng-select>  
+  </div>
+  <div class="col-12 col-md-5">
+    <ng-select [(ngModel)]="userId" (change)="select()" [clearable]=false placeholder="Select user">
+      <ng-option *ngFor="let item of users" [value]="item.id">{{item.name}}</ng-option>
+    </ng-select>  
+  </div>    
+</div>
+
+<div class="row" *ngIf="mode==2">
+  <div class="col-12 col-md-6" *permission="'superadmin'">
+    <ng-select [(ngModel)]="enterpriseId" (change)="select1()" [clearable]=false>
+      <ng-option *ngFor="let item of enterprises" [value]="item.id">{{item.name}}</ng-option>
+    </ng-select>  
+  </div>
+
+  <div class="col-12 col-md-6">
+    <ng-select [(ngModel)]="userId" (change)="select1()" [clearable]=false placeholder="Select user">
+      <ng-option *ngFor="let item of users1" [value]="item.id">{{item.name}}</ng-option>
+    </ng-select>  
+  </div>    
+</div>
+

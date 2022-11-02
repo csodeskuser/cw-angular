@@ -1,0 +1,307 @@
+<loading [loadingIn]="loading"></loading>
+
+<div class="card p-5">
+  <div class="row" >
+    <div class="col-lg-3" style="margin-top: 1%">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Customer"
+        />
+        <!-- <div class="input-group-append">
+          <button class="btn btn-success" type="submit"><i class="fa fa-search"></i></button>
+        </div> -->
+      </div>
+    </div>
+
+    <div class="col-lg-3">
+      <ng-select
+        [(ngModel)]="enterprise_name"
+        (change)="load()"
+        [clearable]="false"
+      >
+        <ng-option *ngFor="let item of groups" [value]="item.id">{{
+          item.name
+        }}</ng-option>
+      </ng-select>
+    </div>
+
+    <div class="col-lg-5" style="margin-top: 1%">
+      <button class="btn btn-secondary mr-2" (click)="onSearch()">
+        &nbsp;Search
+      </button>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr class="headings_tr">
+          <th class="text-center">#</th>
+          <th translate>{{ "Nombre" | translate }}</th>
+          <th translate>Mail</th>
+          <th translate class="text-center">{{ "Acciones" | translate }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of users; let i = index" >
+          <td class="text-center" *ngIf="item.relationships.user !==null">{{ i + 1 }}</td>
+          <td *ngIf="item.relationships.user !==null">{{ item.relationships.user.name }}</td>
+          <td *ngIf="item.relationships.user !==null">{{ item.relationships.user.email }}</td>
+          <td class="text-center" *ngIf="item.relationships.user !==null">
+            <a
+              href="javascript:;"
+              (click)="editClient(content1,item.id)"
+              title="{{ 'Editar' | translate }}"
+            >
+              <i class="fa fa-pencil fa-2x mr-2 icon-success"></i>
+            </a>
+            <a
+              href="javascript:;"
+              mwlConfirmationPopover
+              [popoverTitle]="
+                '¿Quieres eliminar este grupo de forma permanente?' | translate
+              "
+              [confirmText]="'Si' | translate"
+              [cancelText]="'No' | translate"
+              [placement]="'left'"
+              (confirm)="delete()"
+              title="{{ 'Eliminar' | translate }}"
+            >
+              <i class="fa fa-trash fa-2x mr-1 icon-delete"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="text-right">
+    <pagination
+      [pageSize]="filter.perPage"
+      [page]="filter.page"
+      [collectionSize]="filter.collectionSize"
+      (paginationOut)="setPagination($event)"
+    >
+    </pagination>
+  </div>
+</div>
+
+
+<!--Modal editar usuario-->
+<ng-template #content1 let-modal>
+  <div class="modal-header modal-head">
+    <label>Actualizar cliente</label>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="editForm" (ngSubmit)="onSubmitEdit()">
+      <div class="form-group row">
+        <label class="col-sm-4" translate>Reportar a</label>
+        <input
+          type="text"
+          class="form-control col-sm-6"
+          formControlName="report"
+          placeholder="Reportar a"
+          [ngClass]="{ 'is-invalid': submitted && f['report'].errors }"
+          />
+          <div *ngIf="submitted && f['report'].errors" class="invalid-feedback">
+            <div *ngIf="f['report'].errors['required']"><p style="margin-left: 34%;">Reporting url is required</p></div>
+          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4" translate>db suffix</label>
+        <input
+          type="text"
+          class="form-control col-sm-6"
+          formControlName="db_suffix"
+          placeholder="db suffix"
+          [ngClass]="{ 'is-invalid': submitted && f['db_suffix'].errors }"
+          />
+          <div *ngIf="submitted && f['db_suffix'].errors" class="invalid-feedback">
+            <div *ngIf="f['db_suffix'].errors['required']"><p style="margin-left: 34%;">Db suffix is required</p></div>
+          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4" translate>Canal</label>
+        <select formControlName="canal" class="form-control col-sm-6"
+        [ngClass]="{ 'is-invalid': submitted && f['canal'].errors }"
+        >
+          <option>stable</option>
+          <option>beta</option>
+        </select>
+        <div *ngIf="submitted && f['canal'].errors" class="invalid-feedback">
+          <div *ngIf="f['canal'].errors['required']"><p style="margin-left: 34%;">Channel is required</p></div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4" translate>Windows version</label>
+        <select formControlName="windows_version" class="form-control col-sm-6"
+        [ngClass]="{ 'is-invalid': submitted && f['windows_version'].errors }"
+        >
+          <option *ngFor="let item of version.windows" [ngValue]="item.version">{{item.version}}</option>
+        </select>
+        <div *ngIf="submitted && f['windows_version'].errors" class="invalid-feedback">
+          <div *ngIf="f['windows_version'].errors['required']"><p style="margin-left: 34%;">Windows version is required</p></div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4" translate>Linux version</label>
+        <select formControlName="linux_version" class="form-control col-sm-6"
+        [ngClass]="{ 'is-invalid': submitted && f['linux_version'].errors }"
+        >
+          <option *ngFor="let item of version.linux" [ngValue]="item.version">{{item.version}}</option>
+        </select>
+        <div *ngIf="submitted && f['linux_version'].errors" class="invalid-feedback">
+          <div *ngIf="f['linux_version'].errors['required']"><p style="margin-left: 34%;">Linux version is required</p></div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4" translate>Mac version</label>
+        <select formControlName="mac_version" class="form-control col-sm-6"
+        [ngClass]="{ 'is-invalid': submitted && f['mac_version'].errors }"
+        >
+          <option *ngFor="let item of version.darwin" [ngValue]="item.version">{{item.version}}</option>
+        </select>
+        <div *ngIf="submitted && f['mac_version'].errors" class="invalid-feedback">
+          <div *ngIf="f['mac_version'].errors['required']"><p style="margin-left: 34%;">Mac version is required</p></div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4" translate>Hardware inventory interval</label>
+        <input
+          type="text"
+          class="form-control col-sm-6"
+          formControlName="hardware_inventory_interval"
+          placeholder="Hardware inventory interval"
+          style="margin-right: 5%"
+          [ngClass]="{ 'is-invalid': submitted && f['hardware_inventory_interval'].errors }"
+          />
+          <div *ngIf="submitted && f['hardware_inventory_interval'].errors" class="invalid-feedback">
+            <div *ngIf="f['hardware_inventory_interval'].errors['required']"><p style="margin-left: 34%;">Hardware inventory interval is required</p></div>
+          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4" translate>Software inventory interval</label>
+        <input
+          type="text"
+          class="form-control col-sm-6"
+          formControlName="software_inventory_interval"
+          placeholder="Software inventory interval"
+          style="margin-right: 5%"
+          [ngClass]="{ 'is-invalid': submitted && f['software_inventory_interval'].errors }"
+          />
+          <div *ngIf="submitted && f['software_inventory_interval'].errors" class="invalid-feedback">
+            <div *ngIf="f['software_inventory_interval'].errors['required']"><p style="margin-left: 34%;">Software inventory interval is required</p></div>
+          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4" translate>Inactivity time to idle</label>
+        <input
+          type="text"
+          class="form-control col-sm-6"
+          formControlName="inactivity_time_to_idle"
+          placeholder="Inactivity time to idle"
+          style="margin-right: 5%"
+          [ngClass]="{ 'is-invalid': submitted && f['inactivity_time_to_idle'].errors }"
+          />
+          <div *ngIf="submitted && f['inactivity_time_to_idle'].errors" class="invalid-feedback">
+            <div *ngIf="f['inactivity_time_to_idle'].errors['required']"><p style="margin-left: 34%;">Inactivity time to idle is required</p></div>
+          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4" translate>Registry submission interval</label>
+        <input
+          type="text"
+          class="form-control col-sm-6"
+          formControlName="registry_submission_interval"
+          placeholder="Registry submission interval"
+          style="margin-right: 5%"
+          [ngClass]="{ 'is-invalid': submitted && f['registry_submission_interval'].errors }"
+          />
+          <div *ngIf="submitted && f['registry_submission_interval'].errors" class="invalid-feedback">
+            <div *ngIf="f['registry_submission_interval'].errors['required']"><p style="margin-left: 34%;">Registry submission interval is required</p></div>
+          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4" translate>Config verification interval</label>
+        <input
+          type="text"
+          class="form-control col-sm-6"
+          formControlName="config_verification_interval"
+          placeholder="Config verification interval"
+          style="margin-right: 5%"
+          [ngClass]="{ 'is-invalid': submitted && f['config_verification_interval'].errors }"
+          />
+          <div *ngIf="submitted && f['config_verification_interval'].errors" class="invalid-feedback">
+            <div *ngIf="f['config_verification_interval'].errors['required']"><p style="margin-left: 34%;">Config verification interval is required</p></div>
+          </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4" translate>Intervalo de registro</label>
+        <input
+          type="text"
+          class="form-control col-sm-6"
+          formControlName="log_interval"
+          placeholder="Intervalo de registro"
+          style="margin-right: 5%"
+          [ngClass]="{ 'is-invalid': submitted && f['log_interval'].errors }"
+          />
+        <h5>(Seg.)</h5>
+        <div *ngIf="submitted && f['log_interval'].errors" class="invalid-feedback">
+          <div *ngIf="f['log_interval'].errors['required']"><p style="margin-left: 34%;">Log interval is required</p></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div
+          class="checkbox1 row"
+          style="margin-bottom: -18%;"
+        >
+          <section
+            class="inlins-name example-section col-sm-6"
+
+            *ngFor="let item of checkoption"
+          >
+            <mat-checkbox
+              #check
+              [checked]="odata.indexOf(item) >= 0"
+              (change)="onChange(item, check.checked)"
+              value="item.name"
+              >{{ item.name | translate }}</mat-checkbox
+            >
+          </section>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer"  style="margin-top: -6%!important;">
+    <button
+      class="btn btn-outline-danger mr-2 btn-form"
+      type="button"
+      (click)="cancelEdit()"
+      translate
+    >
+      {{ "Cancelar" | translate }}
+    </button>
+    <button
+      ladda="vm.isloading"
+      class="btn btn-outline-secondary btn-form"
+      (click)="onSubmitEdit()"
+      type="submit"
+      translate
+    >
+      {{ "Crear" | translate }}
+    </button>
+  </div>
+</ng-template>

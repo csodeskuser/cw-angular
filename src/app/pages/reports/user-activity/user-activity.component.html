@@ -1,0 +1,122 @@
+<loading [loadingIn]="loading"></loading>
+
+<div class="card p-5">
+  <div class="row">
+    <div class="col-6 col-md-4">
+      <button class="btn btn-sm btn-secondary" (click)="filtered=!filtered">
+        {{'Filtros'|translate}} >>
+      </button> 
+    </div>
+    <div class="col-6 col-md-4 text-right">
+      <!-- <select [(ngModel)]="nResults" class="form-control form-control-sm w-100px ml-auto">
+        <option *ngFor="let item of optionNResults">{{item}}</option>
+      </select> -->
+    </div>    
+    <div class="col-12 col-md-4 text-right">      
+      <button class="btn p-0">
+        <i class="fa fa-question-circle" style='color:#e1e1ed'></i>
+      </button>        
+      <button class="btn btn-secondary btn-print mr-2" (click)="export('pdf')" ngbTooltip="Download Pdf" placement="left">
+        <i class="fa fa-file-pdf"></i>
+      </button>
+      <button class="btn btn-secondary btn-print" (click)="export('xls')" ngbTooltip="Download Excel" placement="left" >
+        <i class="fa fa-file-excel"></i>
+      </button>        
+    </div>
+  </div>
+  <div class="row mt-6">
+    <div class="col-12 col-md-6" *ngIf="filtered">
+      <filter-report (filter)="filter=$event"></filter-report>      
+    </div>
+    <div class="col-6 col-md-2"  style="padding-top: 14px;">
+      <datepicker [dateIn]="date" (dateOut)="date= $event"></datepicker>
+    </div>    
+    <div class="col-6 col-md-4"  style="padding-top: 14px;">
+      <button class="btn btn-secondary" (click)="load()">{{'Buscar'|translate}}</button>
+    </div>    
+  </div>
+</div>
+
+<div class="card p-5 mt-5">
+
+  <highcharts-chart
+    [Highcharts] = "highcharts" 
+    [options] = "chartOptionsUserActivity" 
+    style = "width: 100%; display: block;"
+    [callbackFunction]="chartCb">
+  </highcharts-chart>
+</div>
+
+<div class="card p-5 mt-5 table responsive">
+  <highcharts-chart
+    id="highcharts2"
+    [Highcharts] = "highcharts2" 
+    [options] = "chartOptionsRange" 
+    style = "width: 100%; display: block;"
+    [callbackFunction]="chartspCb"
+    >
+  </highcharts-chart>
+</div>
+
+<div class="card p-5 mt-5 table-responsive">
+  <table class="table table-striped" style="font-size: smaller;">
+    <thead>
+      <tr>
+        <td translate></td>
+        <td translate>
+          {{'Nombre'|translate}}
+        </td>
+        <td translate>
+          {{'Fecha'|translate}}
+        </td>
+        <td translate>
+          {{'Hora inicio'|translate}}
+        </td>
+        <td translate>
+          {{'Hora finalización'|translate}}
+        </td>
+        <td translate>
+          {{'Tiempo total'|translate}}
+        </td>
+        <td translate>
+          {{'Productivo'|translate}}
+        </td>
+        <td translate>
+          {{'No productivo'|translate}}
+        </td>
+        <td translate>
+          {{'Sin categorizar'|translate}}
+        </td>
+        <td translate>
+          {{'Tiempo manual'|translate}}
+        </td>
+        <!-- <td translate>
+          {{'Reunión'|translate}}
+        </td>               -->
+        <td translate>
+          {{'Privado'|translate}}
+        </td>
+        <td translate>
+          {{'Inactividad'|translate}}
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of userActivities; let i = index;">
+        <td>{{(i + 1)*1}}</td>
+        <td>{{item.user}}</td>
+        <td style="white-space: nowrap;">{{datafilter.date}}</td>
+        <td>{{item.start_time}}</td>
+        <td>{{item.end_time}}</td>
+        <td>{{item.elapsed_hours}}</td>
+        <td>{{item.productive_time}}</td>
+        <td>{{item.none_productive_time}}</td>
+        <td>{{item.uncategorized_time}}</td>
+        <td>{{item.manual_time}}</td>
+        <!-- <td>{{item.meeting_time}}</td> -->
+        <td>{{item.private_time}}</td>
+        <td>{{item.inactive_time}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

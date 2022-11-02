@@ -1,0 +1,17 @@
+<div>
+  <div class="d-inline-block input-size" >
+    <select style="width: 80px;margin-right: 10px;" class="form-control form-control-sm" [(ngModel)]="pageSize" (change)="selectPageSize()">
+      <option *ngFor="let item of nItems" [value]="item">{{item}}</option>
+    </select>
+  </div>
+
+  <ngb-pagination 
+      [pageSize]="pageSize" 
+      [collectionSize]="collectionSize"  
+      [(page)]="page" 
+      [maxSize]="2"
+      (pageChange)="pageChange()" 
+      [boundaryLinks]="true"
+      class="d-inline-block">
+  </ngb-pagination>   
+</div>

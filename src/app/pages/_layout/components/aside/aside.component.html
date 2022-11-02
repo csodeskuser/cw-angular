@@ -1,0 +1,115 @@
+<!--begin::Brand-->
+<div class="brand flex-column-auto" id="kt_brand" [ngClass]="brandClasses">
+  <!--begin::Logo-->
+  <a routerLink="/" class="brand-logo">
+    <img alt="Logo" [attr.src]="headerLogo" style="width: 100%; padding: 15px 10px;"/>
+  </a>
+  <!--end::Logo-->
+
+  <ng-container *ngIf="asideSelfMinimizeToggle">
+    <button class="brand-toggle btn btn-sm px-0" id="kt_aside_toggle">
+      <span
+        [inlineSVG]="
+          './assets/media/svg/icons/Navigation/Angle-double-left.svg'
+        "
+        cacheSVG="true"
+        class="svg-icon svg-icon-xl"
+      ></span>
+    </button>
+  </ng-container>
+</div>
+<!--end::Brand-->
+
+<!--begin::Aside Menu-->
+<div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">
+  <ng-container *ngIf="disableAsideSelfDisplay">
+    <!--begin::Header Logo-->
+    <a routerLink="/">
+      <img alt="Logo" [attr.src]="headerLogo" />
+    </a>
+    <!--end::Header Logo-->
+  </ng-container>
+  <!--begin::Menu Container-->
+  <div
+    id="kt_aside_menu"
+    class="aside-menu"
+    [ngClass]="asideMenuCSSClasses"
+    data-menu-vertical="1"
+    [attr.data-menu-scroll]="asideMenuScroll"
+    [attr.data-menu-dropdown]="asideMenuDropdown"
+    data-menu-dropdown-timeout="500"
+  >
+    <!-- begin::Menu Nav -->
+    <ul class="menu-nav" [ngClass]="ulCSSClasses">
+      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+        <a class="menu-link" routerLink="/dashboard" routerLinkActive="active">
+          <span class="menu-icon"><i class="fas fa-tachometer-alt"></i></span>
+          <span class="menu-text" translate="MENU.DASHBOARD"></span>
+        </a>
+      </li>      
+      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-time">
+        <a class="menu-link" routerLink="/manual-time" routerLinkActive="active">
+          <span class="menu-icon"><i class="fas fa-clock"></i></span>
+          <span class="menu-text">{{'Agregar Tiempo Manual'|translate}}</span>
+        </a>
+      </li>      
+      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-sheet">
+        <a class="menu-link" routerLink="/time-sheet" routerLinkActive="active">
+          <span class="menu-icon"><i class="fas fa-list-alt"></i></span>
+          <span class="menu-text">{{'Planilla Automática de Horas'|translate}}</span>
+        </a>
+      </li>
+      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-sheet">
+        <a class="menu-link" routerLink="/permissions" routerLinkActive="active">
+          <span class="menu-icon"><i class="fas fa-list-alt"></i></span>
+          <span class="menu-text">{{'Permisos'|translate}}</span>
+        </a>
+      </li>
+      <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover" routerLinkActive="menu-item-report">
+        <a class="menu-link menu-toggle" href="#" routerLinkActive="active">
+          <span class="menu-icon"><i class="fas fa-chart-pie"></i></span>
+          <span class="menu-text">{{'Reportes de Productividad'|translate}}</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="menu-submenu">
+          <i class="menu-arrow"></i>
+          <ul class="menu-subnav">
+            <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover" routerLinkActive="menu-item-active">
+              <a class="menu-link" routerLink="/user-activity" routerLinkActive="active">
+                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                <span class="menu-text">{{'Actividad por Usuario'|translate}}</span>
+              </a>
+            </li>
+            <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover" routerLinkActive="menu-item-active">
+              <a class="menu-link" routerLink="/daily-productivity" routerLinkActive="active">
+                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                <span class="menu-text">{{'Productividad Diaria'|translate}}</span>
+              </a>
+            </li>
+            <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover" routerLinkActive="menu-item-active">
+              <a class="menu-link" routerLink="/application-use" routerLinkActive="active">
+                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                <span class="menu-text">{{'Uso de Aplicaciones'|translate}}</span>
+              </a>
+            </li>
+            <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover" routerLinkActive="menu-item-active">
+              <a class="menu-link" routerLink="/worked-time" routerLinkActive="active">
+                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                <span class="menu-text">{{'Tiempo Trabajado'|translate}}</span>
+              </a>
+            </li>
+            <li class="menu-item" aria-haspopup="true" data-menu-toggle="hover" routerLinkActive="menu-item-active">
+              <a class="menu-link" routerLink="/screenshots" routerLinkActive="active">
+                <i class="menu-bullet menu-bullet-dot"><span></span></i>
+                <span class="menu-text">{{'Capturas de Pantalla'|translate}}</span>
+              </a>
+            </li>                                                          
+          </ul>
+        </div>
+      </li>
+    </ul>
+    <!-- end::Menu Nav -->
+  </div>
+  <!--end::Menu Container-->
+</div>
+<!--end::Aside Menu-->

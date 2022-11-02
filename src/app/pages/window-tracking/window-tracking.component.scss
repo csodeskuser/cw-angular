@@ -1,0 +1,86 @@
+.checkbox1{
+    font-size: 15px;
+    margin: 2px 8px auto 0 !important;
+}
+
+.inlins-lable{
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.inlins-name{
+    font-size: 15px;
+    font-weight: 500;
+}
+
+
+.brd-top-bottom {
+    border-top: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    margin-bottom: 15px;
+    width: 100%;
+    padding: 5%;
+}
+
+
+::ng-deep .input-size{
+    display: none !important;
+  }
+
+.example-container .mat-form-field + .mat-form-field {
+    margin-left: 8px;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    color: rgb(211, 209, 209)!important;
+//    height: 70%;
+    // opacity: 1!important;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: rgb(0, 174, 255)!important;
+}
+
+// ::ng-deep .mat-input-element {
+//     margin-bottom: 4%!important;
+// }
+
+
+// ::ng-deep .ng-tns-c239-2{
+//     height: 80%!important;
+//     // opacity: 1!important;
+// }
+
+
+.example-section {
+
+    align-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+  
+  .example-margin {
+    margin: 0 10px;
+  }
+  
+
+  .checkbox2{
+    display: inline-block;
+  }
+
+  .mat-checkbox-inner-container {
+    margin: 2px 8px auto 0 !important;
+  }
+
+  ::ng-deep .form-group {
+    margin-bottom: -0.1rem!important;
+  }
+
+ ::ng-deep .cdk-overlay-container {
+    position: fixed;
+    z-index: 9999!important;
+}
+
+::ng-deep .input-group-append {
+  z-index: 1!important;
+}

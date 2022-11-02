@@ -1,0 +1,26 @@
+<div class="dropdown" ngbDropdown placement="bottom-right">
+    <div ngbDropdownToggle class="topbar-item" data-toggle="dropdown" data-offset="10px,0px">
+      <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1">
+        <span class="menu-icon"><img [src]="'assets/imagesTest/1.jpeg'" class="h-25px w-25px"></span>
+      </div>
+    </div>
+  
+    <div ngbDropdownMenu class="dropdown-menu p-0 m-0 dropdown-menu-anim-up dropdown-menu-sm dropdown-menu-right menu-settings">
+        <div *ngFor="let item of options">
+            <a 
+                *ngIf="item.href"
+                ngbDropdownItem
+                target="_blank"                             
+                [href]="item.href">
+                <i class="fa mr-2" [ngClass]="item.img"></i> <span>{{ item.text }}</span>
+            </a>
+            <button 
+                *ngIf="!item.href"
+                ngbDropdownItem             
+                [routerLink]="item.link">
+                <i class="fa mr-2" [ngClass]="item.img"></i> <span>{{ item.text }}</span>
+            </button>    
+        </div>
+
+    </div>  
+</div>

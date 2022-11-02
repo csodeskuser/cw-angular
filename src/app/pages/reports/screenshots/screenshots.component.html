@@ -1,0 +1,110 @@
+<div class="card p-5">
+  <div class="row mt-6">
+    <div class="col-12 col-md-4">
+      <ng-select
+        [items]="users"
+        bindLabel="name"
+        (change)="select($event)"
+        [(ngModel)]="user"
+      >
+      </ng-select>
+    </div>
+    <div class="col-12 col-md-2 div-beside-filter">
+      <datepicker [dateIn]="date" (dateOut)="date = $event"></datepicker>
+    </div>
+    <div class="col-12 col-md-2 div-beside-filter">
+      <button class="btn btn-secondary" (click)="loadss()">
+        {{ "Buscar" | translate }}
+      </button>
+    </div>
+    <div class="col-12 col-md-3 div-beside-filter">
+      <button class="album-size"  (click)="albumSize()"><i class="fa fa-border-all fa-plus-circle fa-2x circle-icon" aria-hidden="true" style='color:#e1e1ed;' ></i></button>
+      <button class="album-size" (click)="albumSizeDec()"><i class="fa fa-minus-circle fa-2x circle-icon" style='color:#e1e1ed;' aria-hidden="true"></i></button>
+    </div>
+    <button class="btn p-0">
+      <i class="fa fa-question-circle" style='color:#e1e1ed; margin-bottom:1; margin-left: 3%;'></i>
+    </button> 
+  </div>
+</div>
+
+<div class="card p-5 mt-5">
+  <loading [loadingIn]="loading"></loading>
+  <div *ngIf="screenshots && searching">
+    <div class="row">
+      <div class="col-12 text-center mb-10">
+        <div class="btn-group" role="group">
+          <button (click)="addDate(-1)" style="padding-left: 0px" class="btn">
+            <i class="fa fa-chevron-left"></i>
+          </button>
+          <div class="text-center" style="padding-top: 8px">
+            <span class="dates-period">{{ date }}</span>
+          </div>
+          <button (click)="addDate(1)" style="padding-right: 0px" class="btn">
+            <i class="fa fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="row main-screenshot"
+      *ngFor="let items of screenshots | keyvalue"
+    >
+      <div class="time col-12">
+        <h5 class="font-weight-bold text-dark">{{ timeforamt(items.key) }}</h5>
+      </div>
+      <div class="screev col-md-{{colSize}}" *ngFor="let item of items.value">
+        <div class="scr-img">
+          <div class="imgheader">
+            <div class="float-left">
+              <span>{{ item.time }} </span>
+            </div>
+            <div class="float-right">
+              <a
+                mwlConfirmationPopover
+                popoverTitle="Do you want to delete this Screenshot?"
+                [confirmText]="'Si' | translate"
+                [cancelText]="'No' | translate"
+                [placement]="'left'"
+                (confirm)="removeScreenshot(item.id)"
+                ><i class="fa fa-times"></i>
+              </a>
+            </div>
+            <div class="thumb_img" >
+              <img
+                class="img-responsive screenshot-image"
+                src="https://app2testing.clowdwork.com/app/api/admin/screenshots/{{item.id}}?token={{token}}"
+                style="margin-bottom: 5px;"
+              />
+            </div>
+            <div style="display: inline-block">
+              <a
+                class="example-image-link"
+                href="https://app2testing.clowdwork.com/app/api/admin/screenshots/{{item.id}}?token={{token}}"
+                data-lightbox="example-set"
+                data-title="thumb"
+                ><i class="fa fa-search-plus" aria-hidden="true"></i> </a
+              >&nbsp;
+              <a class="example-image-link" (click)="download(item.id)"
+                ><i class="fa fa-download" aria-hidden="true"></i>
+              </a>
+            </div>
+            <div class="percentage" [style.background]="percentColor(item.keyPercentage)">
+              <span class="kerper"> {{ item.keyPercentage }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="col-row"
+    *ngIf="!screenshots && searching"
+    style="font-size: 20px; text-align: center"
+  >
+    <div class="col-12 no-screenshot">
+      <h1 style="color: #eee">No Screenshots</h1>
+    </div>
+  </div>
+</div>

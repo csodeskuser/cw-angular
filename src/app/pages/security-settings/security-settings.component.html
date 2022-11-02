@@ -1,0 +1,161 @@
+<loading [loadingIn]="loading"></loading>
+
+<div class="card p-5">
+  <div class="row mt-6">
+    <div class="col-12 col-md-6">
+      <filter-report (filter)="filter=$event"></filter-report>      
+    </div>
+
+    <div class="col-6 col-md-6"  style="padding-top: 14px;">
+      <button class="btn btn-secondary">{{'Buscar'|translate}}</button>
+    </div>    
+  </div>
+
+  <div class="table-responsive mt-6">
+    <table class="table table-borderless">
+      <thead style="border-radius: 10px;
+      box-shadow:inset 0px 0px 0px 1px #ccc;">
+        <tr class="headings_tr">
+          <th>{{'User'|translate}}</th>
+          <th>{{'Email'|translate}}</th>
+          <th>{{'Block USB'|translate}}</th>
+          <th>{{'Block Screenshot'|translate}}</th>
+          <th>{{'Allow Encryption'|translate}}</th>
+          <th>{{'Allow Offline Decryption'|translate}}</th>
+          <th>{{'Allow View Password'|translate}}</th>
+          <th>{{'Allow Change Password'|translate}}</th>
+        </tr>
+        <tr class="text-center">
+          <th></th>
+          <th></th>
+          <th>
+            <div class="icheck-success text-center">
+              <input 
+                type="checkbox" 
+                id="checkBlockUsb"
+                [(ngModel)]="allSettings['bloquear_usb']"
+                (change)="changeAll('bloquear_usb')"                 
+              />
+              <label for="checkBlockUsb"></label>
+            </div>            
+          </th>
+          <th>
+            <div class="icheck-success text-center">
+              <input 
+                type="checkbox" 
+                id="checkBlockScreenshot" 
+              />
+              <label for="checkBlockScreenshot"></label>
+            </div>            
+          </th>
+          <th>
+            <div class="icheck-success text-center">
+              <input 
+                type="checkbox" 
+                id="checkAllowEncryption" 
+              />
+              <label for="checkAllowEncryption"></label>
+            </div>            
+          </th>
+          <th>
+            <div class="icheck-success text-center">
+              <input 
+                type="checkbox" 
+                id="checkAllowOfflineDecryption" 
+              />
+              <label for="checkAllowOfflineDecryption"></label>
+            </div>            
+          </th>
+          <th>
+            <div class="icheck-success text-center">
+              <input type="checkbox" id="checkAllowViewPassword" />
+              <label for="checkAllowViewPassword"></label>
+            </div>            
+          </th>
+          <th>
+            <div class="icheck-success text-center">
+              <input type="checkbox" id="checkAllowChangePassword" />
+              <label for="checkAllowChangePassword"></label>
+            </div>            
+          </th>                                                  
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of securitySettings; let i = index">
+          <td>
+            <img 
+              alt="image" 
+              class="img-circle" 
+              [src]="'https://app.clowdwork.com/api/v1/profile/'+item.id+'/avatar'" 
+              style="width:25px;height:25px"
+            >            
+          </td>
+          <td>{{item.name}}</td>
+          <td>
+            <div class="icheck-success text-center">
+              <input 
+                type="checkbox" 
+                [id]="'checkBlockUsb'+i" 
+              />
+              <label [for]="'checkBlockUsb'+i"></label>
+            </div>            
+          </td>
+          <td>
+            <div class="icheck-success text-center">
+              <input 
+                type="checkbox" 
+                [id]="'checkBlockScreenshot'+i"
+                [ngModel]=item.config?.screenshots_enabled
+                (change)="changeSettings('screenshots_enabled', item.id)"
+              />
+              <label [for]="'checkBlockScreenshot'+i"></label>
+            </div>            
+          </td>
+          <td>
+            <div class="icheck-success text-center">
+              <input 
+                type="checkbox" 
+                [id]="'checkAllowEncryption'+i"
+                [ngModel]=item.config?.permitir_encripcion
+                (change)="changeSettings('permitir_encripcion', item.id)"                 
+              />
+              <label [for]="'checkAllowEncryption'+i"></label>
+            </div>            
+          </td>
+          <td>
+            <div class="icheck-success text-center">
+              <input 
+                type="checkbox" 
+                [id]="'checkAllowOfflineDecryption'+i"
+                [ngModel]=item.config?.permitir_encripcion
+                (change)="changeSettings('permitir_encripcion', item.id)"                 
+              />
+              <label [for]="'checkAllowOfflineDecryption'+i"></label>
+            </div>            
+          </td>
+          <td>
+            <div class="icheck-success text-center">
+              <input 
+                type="checkbox" 
+                [id]="'checkAllowViewPassword'+i" 
+              />
+              <label [for]="'checkAllowViewPassword'+i"></label>
+            </div>            
+          </td>
+          <td>
+            <div class="icheck-success text-center">
+              <input 
+                type="checkbox" 
+                [id]="'checkAllowChangePassword'+i" 
+                [ngModel]=item.config?.permitir_cambiar_password
+                (change)="changeSettings('permitir_cambiar_password', item.id)"
+              />
+              <label [for]="'checkAllowChangePassword'+i"></label>
+            </div>            
+          </td>                                                            
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

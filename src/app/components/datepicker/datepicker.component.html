@@ -1,0 +1,21 @@
+<div class="input-group" style="width:150px">
+  <div class="input-group-append">
+    <button
+      class="btn btn-secondary btn-calendar"
+      (click)="dd.toggle()"
+      type="button"
+    >
+      <i class="fa fa-calendar-alt"></i>
+    </button>
+  </div>        
+  <input
+    class="form-control"
+    placeholder="yyyy-mm-dd"
+    name="dp"
+    [(ngModel)]="date"
+    ngbDatepicker
+    #dd="ngbDatepicker"
+    (ngModelChange)="onChange()"
+    readonly
+  />
+</div>

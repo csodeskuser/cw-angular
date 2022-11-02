@@ -1,0 +1,26 @@
+<div class="btn-group btn-time-period">
+  <button 
+    [class.active]="typeReport === 'weekly'" 
+    class="btn-type-report btn" 
+    (click)="changeTypeReport('weekly')" 
+    translate
+  >
+    {{'Semana'|translate}}
+  </button>
+  <button 
+    [class.active]="typeReport === 'monthly'" 
+    class="btn-type-report btn" 
+    (click)="changeTypeReport('monthly')" 
+    translate
+  >
+    {{'Mes'|translate}}
+  </button>
+  <button 
+    [class.active]="typeReport === 'yearly'" 
+    class="btn-type-report btn" 
+    (click)="changeTypeReport('yearly')" 
+    translate
+  >
+    {{'Año'|translate}}
+  </button>
+</div>

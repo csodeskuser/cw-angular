@@ -1,0 +1,197 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700");
+// Global vendors
+@import "~bootstrap/dist/css/bootstrap.css";
+// => Material
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+@import "~highlight.js/styles/googlecode.css";
+@import "~perfect-scrollbar/css/perfect-scrollbar.css";
+
+// Global fonts
+@import "~socicon/css/socicon.css";
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
+@import "./assets/plugins/flaticon/flaticon.css";
+@import "./assets/plugins/flaticon2/flaticon.css";
+@import "./assets/plugins/keenthemes-icons/font/ki.css";
+
+// Metronic styles (replace these path when using RTL css below)
+@import "./assets/sass/style.angular.scss";
+
+// For RTL, check this documentation https://keenthemes.com/metronic/?page=docs&section=angular-rtl
+// @import "./assets/sass/style.angular.rtl.css";
+
+// Default Layout themes
+@import "./assets/sass/themes/layout/header/base/light.scss";
+@import "./assets/sass/themes/layout/header/menu/light.scss";
+@import "./assets/sass/themes/layout/brand/dark.scss";
+@import "./assets/sass/themes/layout/aside/dark.scss";
+
+// NG Select tema
+@import "~@ng-select/ng-select/themes/material.theme.css";
+
+
+// Header themes
+// .header-base-light {
+//     @import "./assets/sass/themes/layout/header/base/light.scss";
+// }
+
+// .header-base-dark {
+//     @import "./assets/sass/themes/layout/header/base/dark.scss";
+// }
+
+// Header Menu themes
+// .header-menu-light {
+//     @import "./assets/sass/themes/layout/header/menu/light.scss";
+// }
+// .header-menu-dark {
+//     @import "./assets/sass/themes/layout/header/menu/dark.scss";
+// }
+
+// Brand themes
+.brand-dark {
+  @import "./assets/sass/themes/layout/brand/dark.scss";
+}
+
+.brand-light {
+  @import "./assets/sass/themes/layout/brand/light.scss";
+}
+
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+// Aside themes
+// .aside-dark {
+//   @import "./assets/sass/themes/layout/aside/dark.scss";
+// }
+
+// .aside-light {
+//   @import "./assets/sass/themes/layout/aside/light.scss";
+// }
+
+// hide bootstrap dropdown arrow globally
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.angular-bootstrap-table {
+  overflow-x: auto;
+}
+.angular-bootstrap-table {
+  th {
+    outline: none;
+
+    &.sortable {
+      .svg-icon-sort {
+        opacity: 0;
+      }
+
+      &:hover {
+        cursor: pointer;
+
+        .svg-icon-sort {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .table.table-head-custom thead th.sortable-active {
+    color: #3699FF !important;
+  }
+}
+
+.cursor-default {
+  cursor: default !important;
+}
+
+.progress-modal {
+  height: 3px;
+  width: 100%;
+}
+
+.btn .fa-question-circle {
+  color: orange;
+  background-color: white;
+  font-size: 38px;  
+}
+
+.btn-print {
+  padding: 8px 10px 8px 15px;  
+} 
+
+.btn-calendar {
+  border-radius: 100px 0px 0px 100px!important;
+}
+
+.cal-month-view .cal-cell-top {
+  min-height: 78px;
+  flex: 1;
+  cursor: pointer!important;  
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.428571429;  
+}
+
+.headings_tr {
+ // background-color: #0096a1;
+  background-image: linear-gradient(180deg,#064b57); //,#0096a1
+  color:  #3ac6d1; // #0096a1;  //#fff;
+  font-size: 16px;
+  height: 50px;
+  border-radius: 10px;
+  box-shadow:inset 0px -1px 0px 2px #b5b3b3;
+}
+
+.modal .modal-header .close span {
+  display: block;
+}
+
+.img-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50px!important;
+}
+
+.card {
+  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 20%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+}
+
+.icon-success {
+  color:#2196a1;
+  font-size: 24px;  
+}
+
+.icon-delete {
+  color:orange;
+  font-size: 24px;  
+}
+
+.div-beside-filter {
+  padding-top: 14px;
+}
+
+//changes from november
+
+@media (min-width: 992px)
+{
+  .col-lg-3 {
+    flex: 0 0 25%;
+    max-width: 23%;
+}
+}
+
+.btn {
+  font-size: 90%;
+}
+
+.fa {
+  font-size: 1rem;
+}

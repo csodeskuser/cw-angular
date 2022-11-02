@@ -1,0 +1,171 @@
+<loading [loadingIn]="loading"></loading>
+
+<div class="card p-5">
+  <div class="row" >
+    <div class="col-12 col-md-6">
+      <button class="btn btn-sm btn-secondary" (click)="filtered=!filtered">
+        {{'Filtros'|translate}} >>
+      </button> 
+
+      <input 
+        type="search" 
+        class="form-control" 
+        style="display:inline-block; border-radius: 20px; width: 250px;margin-left: 30px;" 
+        ng-model="vm.nameApplication" 
+        placeholder="{{'Nombre de la aplicación' | translate}}" 
+        ng-keyup="$event.keyCode == 13 && vm.aplicacionesWithStatus()"
+      >                                   
+    </div>
+    <div class="col-12 col-md-2 text-right">
+      <button class="btn btn-secondary"><i class="fa fa-cog"></i> {{'Aplicaciones'|translate}}</button>
+    </div>    
+    <div class="col-12 col-md-4 text-right">
+      <div style="display: inline-block;">
+        <!-- <select [(ngModel)]="nResults" class="form-control form-control-sm w-100px mr-5">
+          <option *ngFor="let item of optionNResults">{{item}}</option>
+        </select>       -->
+      </div>      
+      <div style="display: inline-block;">
+        <button class="btn p-0">
+          <i class="fa fa-question-circle" style='color:#e1e1ed'></i>
+        </button>        
+        <button class="btn btn-secondary btn-print mr-2" (click)="export('pdf')" ngbTooltip="Download Pdf">
+          <i class="fa fa-file-pdf"></i>
+        </button>
+        <button class="btn btn-secondary btn-print" (click)="export('xls')" ngbTooltip="Download Excel">
+          <i class="fa fa-file-excel"></i>
+        </button>       
+      </div>
+    </div>
+  </div>
+  <div class="row mt-6">
+    <div class="col-12 col-md-6" *ngIf="filtered">
+      <filter-report (filter)="idfilter=$event"></filter-report>      
+    </div>
+    <div class="col-12 col-md-2 div-beside-filter">
+      <datepicker [dateIn]="startdate" (dateOut)="startdate=$event"></datepicker>
+    </div>    
+    <!-- <div class="col-12 col-md-2 div-beside-filter">
+      <datepicker [dateIn]="enddate" (dateOut)="enddate=$event"></datepicker>
+    </div>         -->
+    <div class="col-12 col-md-2 div-beside-filter">
+      <button class="btn btn-secondary" (click)="search()">{{'Buscar'|translate}}</button>
+    </div>            
+  </div>
+</div>
+
+<category-buttons 
+  [categories]="listCategories" 
+  [selectedsIn]="categorySelecteds"
+  (selectedsOut)="categorySelecteds=$event"
+  (click)="chargeOptionApplicationsUse()"
+  mode=1
+>
+</category-buttons>
+
+<div class="card p-5 mt-5">
+  <div *ngIf="type">
+  <div class="row">
+    <div class="col-12 col-lg-6">
+      <table class="table table-striped table-sm">
+        <thead>
+           <tr>
+              <td translate>{{'Descripción'|translate }}</td>
+              <td translate>{{'Duración'|translate }}</td>
+              <td style="width: 100px;"></td>
+           </tr>
+        </thead>
+        <tbody>
+           <tr *ngFor="let using of listApplication">
+              <td>
+                 <span *ngIf="using.relationships.application">{{using.relationships.application.name}}</span>
+                 <span *ngIf="!using.relationships.application">N/A</span>
+              </td>
+              <td> {{using.duration}}</td>
+              <td class="text-center">
+                 <button class="btn btn-default btn-circle btn-outline-secondary mr-1 btn-icon btn-sm" type="button" [title]="'Revisar'|translate" (click)="state(using.relationships.application.id)">
+                 <i class="fa fa-eye"></i>
+                 </button>
+                 <!-- <button class="btn btn-default btn-circle btn-icon btn-outline-success btn-sm" type="button" [title]="'Categorizar aplicación'">
+                 <i class="fa fa-desktop"></i>
+                 </button> -->
+              </td>
+           </tr>
+        </tbody>
+     </table>
+    </div>
+    <div class="col-12 col-lg-6" *ngIf="listApplication.length !==0">
+      <highcharts-chart
+        [Highcharts] = "highcharts" 
+        [options] = "chartOptions" 
+        style="height: 400px; width: 100%;"
+        [callbackFunction]="chartCb"
+      >
+      </highcharts-chart>
+    </div>
+  </div>
+  <div class="text-right">
+    <pagination 
+      [pageSize]="filter.per_page" 
+      [page]="filter.page" 
+      [collectionSize]="filter.collectionSize" 
+      (paginationOut)="setPagination($event)">
+    </pagination>
+  </div>
+</div>
+  <div *ngIf="!type">
+    <h5>Detailed table</h5>
+    <button class="btn btn-default btn-circle btn-icon btn-outline-secondary btn-sm" type="button" [title]="'normal tabel'"  (click)="close()"> 
+      <i class="fa fa-chevron-left"></i>
+      </button>
+    <div class="row" >
+      
+      <div class="col-lg">
+        <table class="table table-striped table-sm">
+          <thead>
+             <tr>
+                <td translate>{{'Descripción'|translate }}</td>
+                <td translate>{{'Duración'|translate }}</td>
+                <td style="width: 100px;"></td>
+             </tr>
+          </thead>
+          <tbody>
+             <tr *ngFor="let detail of detaildata">
+                <td>
+                   <span ><p>{{detail.caption}}</p></span>
+                   <span *ngIf="detail.url !==null" ><p>url :{{detail.url}}</p></span>
+                 <span  style="width: 80%" *ngIf="detail.id == this.detailid">
+                   <a *ngFor="let user of detail.relationships.agent_daily_caption_user_resume">
+                    <a *ngFor="let img of user.relationships.users">
+                     <img  [ngbTooltip]="img.name"  [src]="getAvatar(img.id)" class="img-circle">
+                    </a>
+                   </a></span>
+                </td>
+                <td *ngFor="let item of detail.relationships.agent_daily_caption_user_resume">{{item.duration}}</td>
+                <td *ngIf="detail.relationships.agent_daily_caption_user_resume.length ==0">00:00:00</td>
+                <td class="text-center">
+                   <button class="btn btn-default btn-circle btn-outline-secondary mr-1 btn-icon btn-sm" type="button" ngbTooltip="View user"  (click)="loadAvatar(detail.id)" >
+                   <i class="fa fa-eye"></i>
+                   </button>
+                   <!-- <button class="btn btn-default btn-circle btn-icon btn-outline-success btn-sm" type="button" [title]="'Categorizar aplicación'">
+                   <i class="fa fa-desktop"></i>
+                   </button> -->
+                </td>
+             </tr>
+          </tbody>
+       </table>
+      </div>
+    </div>
+    <div class="text-right">
+      <pagination 
+        [pageSize]="filter.per_page" 
+        [page]="filter.page" 
+        [collectionSize]="filter.collectionSize" 
+        (paginationOut)="setPaginationDetail($event)">
+      </pagination>
+    </div>
+  </div>
+ 
+
+</div>
+

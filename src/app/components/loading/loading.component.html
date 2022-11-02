@@ -1,0 +1,8 @@
+<div>
+  <ng-template #templateLoading>
+    <div class="text-center div-loading-effect">
+      <img class="loading-effect" src="assets/media/logos/logo_u.png">
+    </div>
+  </ng-template>
+  <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="templateLoading"></ngx-loading>
+</div>
